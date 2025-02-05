@@ -11344,6 +11344,44 @@ h4, .card-footer h2{
 .row button {
   margin: 10px;
 }
+
+#loginForm {
+  color: blue;
+}
+
+#loginForm input {
+  background-color: var(--bs-gray-400);
+}
+
+#form_card {
+  background: rgba( 255, 255, 255, 0.2 );
+  box-shadow: 0 8px 32px 0 rgba( 31, 38, 135, 0.37 );
+  border-radius: 20px;
+  padding: 50px 20px;
+  margin: 20px 100px;
+  backdrop-filter: blur(20px);
+}
+
+.imgContainer img {
+  width: 100%;
+}
+
+.bg-image {
+  background-image: url(pictures/cityHall.png);
+  background-size: cover;
+  backdrop-filter: blur(5px);
+  background-repeat: no-repeat;
+}
+
+.card-body h1 { 
+  color: white;
+  text-shadow: black 5px 5px 10px;
+}
+
+
+
+
+
 .profile-picture {
   width: 100px;
   height: 100px;

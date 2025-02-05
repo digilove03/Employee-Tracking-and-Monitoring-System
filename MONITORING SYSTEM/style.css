@@ -11355,3 +11355,62 @@ h4, .card-footer h2{
   background-color: #f8f9fa;
   margin: 0 auto;
 }
+
+.buttons {
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.filter-container {
+  background-color: #e6f2ec;
+  padding: 15px;
+  border-radius: 10px;
+  width: max-content;
+}
+
+.filter-group {
+  margin-bottom: 10px;
+}
+
+.filter-group label {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.filter-btn {
+  background-color: #5078c8;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.filter-btn.active, .filter-btn:hover {
+  background-color: #62a1ff;
+}
+
+.filter-btn i {
+  margin-left: 5px;
+}
+
+.generate-btn {
+  background-color: #62a1ff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.generate-btn:hover {
+  background-color: #007bff;
+}

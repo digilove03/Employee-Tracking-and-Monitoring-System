@@ -11344,3 +11344,14 @@ h4, .card-footer h2{
 .row button {
   margin: 10px;
 }
+.profile-picture {
+  width: 100px;
+  height: 100px;
+  border: 2px solid #ccc;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  margin: 0 auto;
+}

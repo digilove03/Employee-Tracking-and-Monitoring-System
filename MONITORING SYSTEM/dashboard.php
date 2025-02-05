@@ -37,7 +37,7 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading"><img class="logo" src="pictures/dasmoLogo.png" alt=""></div>
+                            <div class="sb-sidenav-menu-heading"><img class="logo" src="img/dasmoLogo.png" alt=""></div>
                             <br>
                             <a class="nav-link" id="linkBG" href="index.html">
                                 <div class="sb-nav-link"><i class="fas fa-box"></i></div>

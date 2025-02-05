@@ -36,7 +36,7 @@
                 <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                     <div class="sb-sidenav-menu">
                         <div class="nav">
-                            <div class="sb-sidenav-menu-heading"><img class="logo" src="pictures/dasmoLogo.png" alt=""></div>
+                            <div class="sb-sidenav-menu-heading"><img class="logo" src="img/dasmoLogo.png" alt=""></div>
                             <br>
                             <a class="nav-link" id="homeLink" href="index.html">
                                 <div class="sb-nav-link"><i class="fas fa-box"></i></div>
@@ -63,7 +63,7 @@
             </div>
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="buttons">
+                    <div class="buttons m-3">
                     <div class="filter-container">
                         <div class="filter-group">
                             <label>Categorize by</label>
@@ -81,19 +81,18 @@
                             <button class="filter-btn">Yearly</button>
                             <button class="filter-btn">Custom <i class="fa-solid fa-calendar"></i></button>
                         </div>
-                
-                        <button class="generate-btn">Generate Report</button>
+
+                        <div class="d-flex justify-content-end">
+                            <button class="generate-btn">Generate Report</button>
+                        </div>
+                  
                     </div>
                 </div>
                 
                     <div class="container-fluid px-4">
                         <div class="col">
-                            <div class="card mt-3">
-                                dfdfgdfg
-                            </div>
-
-                            <div class="row d-flex justify-content-end">
-                                <button class="btn btn-primary col-xl-1 col-sm-2">Export Report</button>
+                            <div class="d-grid d-md-flex justify-content-md-end">
+                                <button class="btn btn-primary col-xl-2 m-2">Export Report</button>
                             </div>
 
                             <div>
@@ -101,12 +100,15 @@
                                 <br>
                                 <div class="container-fluid px-4">
                                     <div class="row">
-                                        <div class="col-xl-6">
-                                            <h1>dsfdsfsdf</h1>
+                                        <div class="col-xl-6 col-md-6">
+                                            <h3>Text here</h3>
+                                            <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Iure rem magni culpa explicabo? Illum, quibusdam ipsum! Consequatur sint ab architecto. Ipsa animi aliquid laboriosam quis numquam. Eligendi nam magni iusto!</p>
                                         </div>
     
-                                        <div class="col-xl-6 card" id="chart_div">
-                                            <h5 class="vertical_text"><center>DEPARTMENT PRODUCTIVITY</center></h5>
+                                        <div class="col-xl-6 col-md-6 card" id="chart_div">
+                                            <h5><center>DEPARTMENT PRODUCTIVITY</center></h5>
+
+                                            <!--Charts here -->
                                             <div class="card-body"><canvas id="myPieChart" width="100%" height="50"></canvas></div>                                     
                                         </div>
     

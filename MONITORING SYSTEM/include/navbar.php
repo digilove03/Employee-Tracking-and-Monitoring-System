@@ -1,11 +1,4 @@
-<?php include 'scripts.php';?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Side Nav</title>
-    <link rel="stylesheet" href="style.css">
+
     <style>
         .nav-link {
             border-radius: 10px;
@@ -27,26 +20,24 @@
             justify-content: center;
         }
     </style>
-</head>
-<body class="sb-nav-fixed">
-    <div id="layoutSidenav">
+
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
                     <div class="nav">
                         <div class="sb-sidenav-menu-heading"><img class="logo" src="img/dasmoLogo.png" alt=""></div>
                         <br>
-                        <a class="nav-link" href="index.html">
+                        <a class="nav-link" href="dashboard.php">
                             <div class="sb-nav-link"><i class="fas fa-box"></i></div>
                             Dashboard
                         </a>
     
-                        <a class="nav-link" href="employees.html">
+                        <a class="nav-link" href="employees.php">
                             <div class="sb-nav-link"><i class="fas fa-person"></i></div>
                             Employees
                         </a>
     
-                        <a class="nav-link" href="reports.html">
+                        <a class="nav-link" href="reports.php">
                             <div class="sb-nav-link"><i class="fas fa-chart-line"></i></div>
                             Reports and Analytics
                         </a>
@@ -59,6 +50,3 @@
                 </div>
             </nav>
         </div>
-    </div>
-</body>
-</html>

@@ -5,6 +5,8 @@ if (!isset($_SESSION['admin_id'])) {
     exit();
 }
 ?>
+    
+<?php include 'scripts.php';?>
 
 <!DOCTYPE html>
 <html lang="en">

@@ -10,79 +10,127 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
-            background: linear-gradient(to right, #1d3557, #457b9d); /* Modern gradient */
-            color: white;
+            background: url('img/cityHall.png') no-repeat center center fixed;
+            background-size: cover;
             height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
+            position: relative;
+        }
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(8px); 
+            background-color: rgba(255, 255, 255, 0.2); 
+            z-index: -1;
+        }
+        .container-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 150px; 
         }
         .login-container {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
+            background: #1d3557;
             padding: 30px;
-            max-width: 400px;
-            box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            color: white;
         }
         .form-floating label {
-            color: #ccc;
+            color: #333;
         }
         .form-control {
-            background-color: rgba(255, 255, 255, 0.1);
-            color: white;
-            border: none;
+            background-color: white;
+            color: black;
+            border: 1px solid #1d3557;
+            padding-right: 40px; 
         }
         .form-control::placeholder {
-            color: rgba(255, 255, 255, 0.7);
+            color: rgba(79, 114, 228, 0.7);
         }
         .btn-primary {
-            background: #f4a261;
+            background:rgb(98, 177, 246);
             border: none;
         }
         .btn-primary:hover {
-            background: #e76f51;
+            background:rgb(81, 96, 231);
         }
         .logo-container {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 20px;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
         }
-        .logo-container img {
-            width: 70px;
-            height: 70px;
+        .logos {
+            display: flex;
+            justify-content: center;
+            gap: 25px; 
+            margin-bottom: 10px;
+        }
+        .logos img {
+            width: 180px;
+            height: 180px;
             object-fit: contain;
             border-radius: 5px;
+        }
+        .system-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
         }
         #loginMessage {
             color: #ff6b6b;
             font-weight: bold;
             text-align: center;
             margin-top: 10px;
+            display: none;
+        }
+        .position-relative .fa-eye,
+        .position-relative .fa-eye-slash {
+            position: absolute;
+            top: 50%;
+            right: 15px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            z-index: 10;
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="logo-container">
-            <img src="img/cityLogo.png" alt="City Logo">
-            <img src="img/dasmoLogo.png" alt="Dasmo Logo">
+    <div class="container-wrapper">
+        <!-- Login Form -->
+        <div class="login-container">
+            <h2 class="text-center mb-3">Login to Admin Panel</h2> <br>
+            <form id="loginForm">
+                <div class="form-floating mb-3">
+                    <input class="form-control" id="username" name="username" type="text" placeholder="Username" required>
+                    <label for="username">USERNAME</label>
+                </div> <br>
+                <div class="form-floating mb-3 position-relative">
+                    <input class="form-control" id="password" name="password" type="password" placeholder="Password" required>
+                    <label for="password">PASSWORD</label>
+                    <i class="fa-solid fa-eye position-absolute toggle-password" id="togglePassword" 
+                    style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; pointer-events: auto;"></i>
+                </div> <br>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary">LOGIN</button>
+                </div>
+                <p id="loginMessage"></p>
+            </form>
         </div>
-        <h2 class="text-center mb-3">Login to Admin Panel</h2>
-        <form id="loginForm">
-            <div class="form-floating mb-3">
-                <input class="form-control" id="username" name="username" type="text" placeholder="Username" required>
-                <label for="username">USERNAME</label>
-            </div>
-            <div class="form-floating mb-3">
-                <input class="form-control" id="password" name="password" type="password" placeholder="Password" required>
-                <label for="password">PASSWORD</label>
-            </div>
-            <div class="d-grid">
-                <button type="submit" class="btn btn-primary">LOGIN</button>
-            </div>
-            <p id="loginMessage"></p>
-        </form>
+
+        <!-- Logo Section -->
+        <div class="logo-container">
+            <div class="logos">
+                <img src="img/cityLogo.png" alt="City Logo">
+                <img src="img/dasmoLogo.png" alt="Dasmo Logo">
+            </div> <br>
+            <p class="system-title">EMPLOYEES MONITORING AND TRACKING SYSTEM</p>
+        </div>
     </div>
 
     <script>
@@ -94,16 +142,36 @@
                     url: "authenticate.php",
                     data: $(this).serialize(),
                     dataType: "json",
+                    contentType: "application/x-www-form-urlencoded",
                     success: function(response) {
                         if (response.status === "success") {
-                            window.location.href = "dashboard.php"; // Redirect
+                            window.location.href = "dashboard.php"; 
                         } else {
-                            $("#loginMessage").text(response.message);
+                            $("#loginMessage").text(response.message).fadeIn();
                         }
+                    },
+                    error: function() {
+                        $("#loginMessage").text("Error processing request.").fadeIn();
                     }
                 });
             });
         });
+
+        document.addEventListener("DOMContentLoaded", function () {
+        const passwordInput = document.getElementById("password");
+        const togglePassword = document.getElementById("togglePassword");
+
+            togglePassword.addEventListener("click", function () {
+                if (passwordInput.type === "password") {
+                    passwordInput.type = "text";
+                    togglePassword.classList.replace("fa-eye", "fa-eye-slash");
+                } else {
+                    passwordInput.type = "password";
+                    togglePassword.classList.replace("fa-eye-slash", "fa-eye");
+                }
+            });
+        });
+
     </script>
 </body>
 </html>

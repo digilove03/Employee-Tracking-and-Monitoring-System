@@ -8,8 +8,6 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>MONITORING</title>
-        <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
-        <link href="css/style.css" rel="stylesheet" />
     </head>
     <body class="sb-nav-fixed">
         <nav class="sb-topnav navbar navbar-expand navbar-dark" id="topNavBG">

@@ -8,8 +8,6 @@
         <meta name="description" content="" />
         <meta name="author" content="" />
         <title>MONITORING</title>
-        <link href="css/style.css" rel="stylesheet" />
-
         <style>             
             .buttons {
               font-family: Arial, sans-serif;

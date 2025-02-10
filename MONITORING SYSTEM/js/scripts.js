@@ -24,3 +24,33 @@ window.addEventListener('DOMContentLoaded', event => {
     }
 
 });
+
+
+document.addEventListener("DOMContentLoaded", function () {
+    const links = document.querySelectorAll(".nav-link");
+
+    // Get current page URL
+    const currentPage = window.location.pathname.split("/").pop();
+
+    links.forEach(link => {
+        // Check if the href matches the current page
+        if (link.getAttribute("href") === currentPage) {
+            link.classList.add("active");
+        }
+
+        // Add click event to store active link in localStorage
+        link.addEventListener("click", function () {
+            localStorage.setItem("activeLink", this.getAttribute("href"));
+        });
+    });
+
+    // Retrieve and apply active class after page reload
+    const activeLink = localStorage.getItem("activeLink");
+    if (activeLink) {
+        links.forEach(link => {
+            if (link.getAttribute("href") === activeLink) {
+                link.classList.add("active");
+            }
+        });
+    }
+});

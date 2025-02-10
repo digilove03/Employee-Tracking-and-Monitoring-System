@@ -41,6 +41,11 @@
                             <div class="sb-nav-link"><i class="fas fa-chart-line"></i></div>
                             Reports and Analytics
                         </a>
+
+                        <a class="nav-link" href="#">
+                            <div class="sb-nav-link"><i class="fas fa-tasks"></i></div>
+                            Tasks
+                        </a>
                         
                     </div>
                 </div>

@@ -19,6 +19,11 @@
             display: flex;
             justify-content: center;
         }
+
+        .nav-link.active {
+            background-color: white;
+            color: #002233 !important;
+        }
     </style>
 
         <div id="layoutSidenav_nav">

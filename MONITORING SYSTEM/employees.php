@@ -1,4 +1,10 @@
-<?php include 'include/scripts.php';?>
+<?php 
+require('db_connect.php');
+include 'include/scripts.php';
+// Fetch employee data
+$query = "SELECT * FROM employee ORDER BY id ASC";
+$result = $conn->query($query);
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -7,7 +13,12 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>MONITORING SYSTEM</title>
+        <title>EMPLOYEE TRACKING AND MONITORING SYSTEM</title>
+        <style>
+            .dropdown-item:hover {
+                cursor: pointer;
+            }
+        </style>
     </head>
     <body class="sb-nav-fixed">
 
@@ -28,18 +39,20 @@
                         <br>
                         <div class="employee_container">
                             <div class="row">
-                                <div class="col-xl-3 col-md-6">
-                                    <div class="card total_employee text-white mb-4">
-                                        <div class="card-body fas fa-id-badge fa-10x"></div>
-                                        <div class="card-footer">
-                                            <center><h1><b>Name</b></h1></center>
-                                            <div class="row">
-                                                <button class="btn btn-success col"><i class="fas fa-pencil"></i></button>
-                                                <button class="btn btn-danger col"><i class="fas fa-trash"></i></button>
+                                <?php while ($row = $result->fetch_assoc()): ?>
+                                    <div class="col-xl-3 col-md-6">
+                                        <div class="card total_employee text-white mb-4">
+                                            <div class="card-body fas fa-id-badge fa-10x"></div>
+                                            <div class="card-footer">
+                                                <center><h1><b><?php echo explode(' ', htmlspecialchars($row['first_name']))[0]; ?></b></h1></center>
+                                                <div class="row">
+                                                    <button class="btn btn-success col"><i class="fas fa-pencil"></i></button>
+                                                    <button class="btn btn-danger col"><i class="fas fa-trash"></i></button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                <?php endwhile; ?>
                             </div>
                         </div>
                     </div>
@@ -83,31 +96,36 @@
                                 </button>
                             </div>
 
-                            <input type="text" class="form-control mb-3 mt-2" id="employeeName" placeholder=" Name" required>
-                            <input type="text" class="form-control mb-3 mt-2" id="employeePosition" placeholder=" Position" required>
-                            <input type="text" class="form-control mb-3 mt-2" id="employeeDepartment" placeholder=" Department" required>
-                            <input type="text" class="form-control mb-3 mt-2" id="employeeHiredDate" placeholder=" Hired Date" required>
+                            <input type="text" class="form-control mb-3 mt-2" name="firstName" placeholder="First Name" required>
+                            <input type="text" class="form-control mb-3 mt-2" name="lastName" placeholder="Last Name" required>
+                            <input type="text" class="form-control mb-3 mt-2" name="middleName" placeholder="Middle Name" required>
+
+                            <input type="text" class="form-control mb-3 mt-2" name="employeePosition" placeholder="Position" required>
+                            <input type="text" class="form-control mb-3 mt-2" name="employeeDepartment" placeholder="Department" required>
                         </div>
 
                         <!-- Second Column with Contact Number, Address, Date of Birth, Sex, Age, and Civil Status -->
                         <div class="col-sm-6">
-                            <input type="text" class="form-control mb-3 mt-2" id="employeeContactNum" placeholder=" Contact Number" required>
-                            <input type="text" class="form-control mb-3 mt-2" id="employeeAddress" placeholder=" Address" required>
-                            <input type="text" class="form-control mb-3 mt-2" id="employeeDate_of_Birth" placeholder=" Date of Birth" required>
-                            <input type="text" class="form-control mb-3 mt-2" id="employeeSex" placeholder=" Sex" required>
-                            <input type="text" class="form-control mb-3 mt-2" id="employeeAge" placeholder=" Age" required>
+                            <input type="text" class="form-control mb-3 mt-2" name="emailAdd" placeholder="Email Address" required>
+                            <input type="date" class="form-control mb-3 mt-2" name="employeeHiredDate" placeholder="Hired Date" required>
+
+                            <input type="number" class="form-control mb-3 mt-2" name="employeeContactNum" placeholder="Contact Number" required>
+                            <input type="text" class="form-control mb-3 mt-2" name="employeeAddress" placeholder="Address" required>
+                            <input type="date" class="form-control mb-3 mt-2" name="employeeDate_of_Birth" placeholder="Date of Birth" required>
+                            <input type="text" class="form-control mb-3 mt-2" name="employeeSex" placeholder="Sex" required>
+                            <input type="number" class="form-control mb-3 mt-2" name="employeeAge" placeholder="Age" required>
 
                             <!-- Civil Status Dropdown -->
                             <div class="input-group mb-3 mt-2">
-                                <input type="text" class="form-control" id="employeeCivilStatus" placeholder=" Civil Status" required readonly>
+                                <input type="text" class="form-control"  name="employeeCivilStatus" id="employeeCivilStatus" placeholder=" Civil Status" required readonly>
                                 <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     ▼
                                 </button>
                                 <ul class="dropdown-menu" aria-labelledby="employeeCivilStatus">
-                                    <li><a class="dropdown-item" href="#" onclick="setCivilStatus('Single')">Single</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="setCivilStatus('Married')">Married</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="setCivilStatus('Divorced')">Divorced</a></li>
-                                    <li><a class="dropdown-item" href="#" onclick="setCivilStatus('Widowed')">Widowed</a></li>
+                                    <li><a class="dropdown-item" onclick="setCivilStatus('Single')">Single</a></li>
+                                    <li><a class="dropdown-item" onclick="setCivilStatus('Married')">Married</a></li>
+                                    <li><a class="dropdown-item" onclick="setCivilStatus('Divorced')">Divorced</a></li>
+                                    <li><a class="dropdown-item" onclick="setCivilStatus('Widowed')">Widowed</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -128,8 +146,18 @@
             function setCivilStatus(status) {
                 document.getElementById('employeeCivilStatus').value = status;
             }
+
+            // Auto-refresh page every 5 seconds to load new employees
+            //optional?
+            setInterval(() => {
+            fetch('fetch_employees.php')
+                .then(response => response.text())
+                .then(data => {
+                    document.getElementById('employeeContainer').innerHTML = data;
+                });
+            }, 5000);
         </script>
 
     </body>
 </html>
-
+<?php $conn->close(); ?>

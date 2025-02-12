@@ -24,9 +24,9 @@
                         <br>
                         <div class="row">
                             <div class="col-xl-3 col-md-6">
-                                <div class="card total_employee text-white mb-4">
+                                <div class="card total_employee text-white mb-4 h-100">
                                     <div class="card-body"><center><h2>TOTAL EMPLOYEES</h2></center></div>
-                                    <div class="card-footer">
+                                    <div class="card-footer h-100 d-flex align-items-center justify-content-center">
                                         <center><h1><b>34</b></h1></center>
                                     </div>
                                 </div>

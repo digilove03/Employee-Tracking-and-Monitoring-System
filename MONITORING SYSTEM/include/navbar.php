@@ -47,7 +47,7 @@
                             Reports and Analytics
                         </a>
 
-                        <a class="nav-link" href="#">
+                        <a class="nav-link" href="tasks.php">
                             <div class="sb-nav-link"><i class="fas fa-tasks"></i></div>
                             Tasks
                         </a>

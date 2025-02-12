@@ -62,23 +62,28 @@
 
                     <div class="card-body">
                         
-                        <form id="taskForm" class="row g-3">
-                            <div class="col-md-4">
-                                <label for="employeeName" class="form-label">Employee Name</label>
-                                <input type="text" id="employeeName" class="form-control" required>
-                            </div>
-                            <div class="col-md-4">
-                                <label for="taskDescription" class="form-label">Task Description</label>
-                                <input type="text" id="taskDescription" class="form-control" required>
-                            </div>
-                            <div class="col-md-2">
-                                <label for="estimatedTime" class="form-label">Estimated Time (hrs)</label>
-                                <input type="number" id="estimatedTime" class="form-control" required>
-                            </div>
-                            <div class="col-md-2 d-grid">
-                                <button type="submit" class="btn btn-primary mt-4">Assign Task</button>
-                            </div>
-                        </form>
+                                      
+                    <form id="taskForm" class="row g-3">
+    <div class="col-md-3">
+        <label for="employeeName" class="form-label">Employee Name</label>
+        <input type="text" id="employeeName" class="form-control" required>
+    </div>
+    <div class="col-md-3">
+        <label for="service" class="form-label">Service</label>
+        <input type="text" id="service" class="form-control" required>
+    </div>
+    <div class="col-md-2">
+        <label for="location" class="form-label">Location</label>
+        <input type="text" id="location" class="form-control" required>
+    </div>
+    <div class="col-md-2">
+        <label for="estimatedTime" class="form-label">Estimated Time (hrs)</label>
+        <input type="number" id="estimatedTime" class="form-control" required>
+    </div>
+    <div class="col-md-2 d-grid">
+        <button type="submit" class="btn btn-primary mt-4">Assign Task</button>
+    </div>
+</form>
 
                         <!-- Task Table -->
                         <div class="table-responsive mt-4">

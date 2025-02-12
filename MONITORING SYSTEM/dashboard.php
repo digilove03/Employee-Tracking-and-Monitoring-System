@@ -14,10 +14,8 @@
         <div><?php include 'include/header.php';?></div>
         
         <div id="layoutSidenav">
-            
-            <div id="layoutSidenav_nav">
 
-                <div><?php include 'include/navbar.php';?></div>
+            <div><?php include 'include/navbar.php';?></div>
                 
             <div id="layoutSidenav_content">
                 <main>

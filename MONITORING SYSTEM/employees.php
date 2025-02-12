@@ -81,7 +81,7 @@ $result = $conn->query($query);
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
-            <form>
+            <form action="save_emloyee.php" method="POST">
                 <div class="modal-body">
                     <div class="row">
                         <!-- First Column with Upload Button, Name, Position, Department, Hired Date -->

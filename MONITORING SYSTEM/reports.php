@@ -7,7 +7,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>MONITORING</title>
+        <title>EMPLOYEE MONITORING AND TRACKING SYSTEM</title>
         <style>             
             .buttons {
               font-family: Arial, sans-serif;

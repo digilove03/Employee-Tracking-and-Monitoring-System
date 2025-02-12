@@ -13,7 +13,7 @@ $result = $conn->query($query);
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
         <meta name="description" content="" />
         <meta name="author" content="" />
-        <title>EMPLOYEE TRACKING AND MONITORING SYSTEM</title>
+        <title>EMPLOYEE MONITORING AND TRACKING SYSTEM</title>
         <style>
             .dropdown-item:hover {
                 cursor: pointer;

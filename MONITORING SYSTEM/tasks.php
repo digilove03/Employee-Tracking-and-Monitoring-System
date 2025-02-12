@@ -25,11 +25,11 @@
         background: rgb(21, 68, 118) !important; /* Updated Color */
         color: white;
     }
- 
-
-
-
-
+    .table th {
+        background: rgb(21, 68, 118);
+        color: white;
+        text-align: center;
+    }
         
     .btn-delete {
         background: #dc3545;

@@ -89,15 +89,6 @@
             margin-top: 10px;
             display: none;
         }
-        .position-relative .fa-eye,
-        .position-relative .fa-eye-slash {
-            position: absolute;
-            top: 50%;
-            right: 15px;
-            transform: translateY(-50%);
-            cursor: pointer;
-            z-index: 10;
-        }
     </style>
 </head>
 <body>
@@ -113,8 +104,6 @@
                 <div class="form-floating mb-3 position-relative">
                     <input class="form-control" id="password" name="password" type="password" placeholder="Password" required>
                     <label for="password">PASSWORD</label>
-                    <i class="fa-solid fa-eye position-absolute toggle-password" id="togglePassword" 
-                    style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; pointer-events: auto;"></i>
                 </div> <br>
                 <div class="d-grid">
                     <button type="submit" class="btn btn-primary">LOGIN</button>
@@ -156,22 +145,6 @@
                 });
             });
         });
-
-        document.addEventListener("DOMContentLoaded", function () {
-        const passwordInput = document.getElementById("password");
-        const togglePassword = document.getElementById("togglePassword");
-
-            togglePassword.addEventListener("click", function () {
-                if (passwordInput.type === "password") {
-                    passwordInput.type = "text";
-                    togglePassword.classList.replace("fa-eye", "fa-eye-slash");
-                } else {
-                    passwordInput.type = "password";
-                    togglePassword.classList.replace("fa-eye-slash", "fa-eye");
-                }
-            });
-        });
-
     </script>
 </body>
 </html>

@@ -1,11 +1,21 @@
-<?php include 'include/scripts.php'; ?>
+<?php 
+session_start();
+include('db_connect.php');
+if (!isset($_SESSION['admin_id'])) {
+    header("Location: index.php");
+    exit();
+}
+
+include ('include/scripts.php');
+include ('include/header.php');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>MONITORING</title>
+    <title>EMPLOYEE MONITORING AND TRACKING SYSTEM</title>
     <style>
        .table-container {
     display: flex;
@@ -38,8 +48,6 @@ th {
     </style>
 </head>
 <body class="sb-nav-fixed">
-
-    <?php include 'include/header.php'; ?>
 
     <div id="layoutSidenav">
         <div id="layoutSidenav_nav">

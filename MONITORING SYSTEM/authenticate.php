@@ -1,25 +1,35 @@
 <?php
 session_start();
-include 'db_connect.php'; // Include database connection
+include('db_connect.php');
 
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
-    $password = $_POST['password'];
+    $password = $_POST['password']; // Plain text password
 
-    // Prepare and execute query
-    $stmt = $conn->prepare("SELECT * FROM admin WHERE username = ? AND password = ?");
-    $stmt->bind_param("ss", $username, $password);
+    // Prevent SQL injection
+    $query = "SELECT * FROM admin WHERE username = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("s", $username);
     $stmt->execute();
     $result = $stmt->get_result();
 
-    if ($result->num_rows === 1) {
-        $_SESSION['admin'] = $username; // Store session
-        echo json_encode(["status" => "success", "message" => "Login successful"]);
-    } else {
-        echo json_encode(["status" => "error", "message" => "Invalid credentials"]);
-    }
+    if ($result->num_rows == 1) {
+        $admin_row = $result->fetch_assoc();
+        if ($password == $admin_row['password']) { 
+            $_SESSION['admin_id'] = $admin_row['id']; 
 
-    $stmt->close();
-    $conn->close();
+            echo json_encode(["status" => "success"]);
+            exit();
+        } else {
+            echo json_encode(["status" => "error", "message" => "Invalid password."]);
+            exit();
+        }
+    } else {
+        echo json_encode(["status" => "error", "message" => "User not found."]);
+        exit();
+    }
 }
+
+echo json_encode(["status" => "error", "message" => "Invalid request."]);
+exit();
 ?>

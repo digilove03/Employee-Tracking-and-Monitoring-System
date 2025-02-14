@@ -1,8 +1,9 @@
 <?php 
 session_start();
 include ('db_connect.php');
-include ('include/header.php');
 include ('include/scripts.php');
+include ('include/header.php');
+include ('include/navbar.php');
 if (!isset($_SESSION['admin_id'])) {
     header("Location: index.php");
     exit();
@@ -29,11 +30,7 @@ $result = $conn->query($query);
         </style>
     </head>
     <body class="sb-nav-fixed">
-        
         <div id="layoutSidenav">
-
-        <nav><?php include 'include/navbar.php';?></nav>
-            
             <div id="layoutSidenav_content">
                 <main>
                     <div class="container-fluid px-4">

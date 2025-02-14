@@ -48,7 +48,7 @@ $result = $conn->query($query);
                                 <?php while ($row = $result->fetch_assoc()): ?>
                                     <div class="col-xl-3 col-md-6">
                                         <div class="card total_employee text-white mb-4">
-                                        <div class="card-body">
+                                        <div class="card-body d-flex justify-content-center">
                                             <img src="<?php echo htmlspecialchars($row['photo_path']); ?>" class="rounded-circle" width="100" height="100" alt="Profile Picture">
                                         </div>
                                             <div class="card-footer">

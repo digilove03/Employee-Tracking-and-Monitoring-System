@@ -1,4 +1,8 @@
-<?php include 'include/scripts.php';?>
+<?php 
+include 'include/scripts.php';
+include 'include/header.php';
+include 'include/navbar.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -84,9 +88,7 @@
         </style>
     </head>
     <body class="sb-nav-fixed">
-        <div><?php include 'include/header.php';?></div>
         <div id="layoutSidenav">
-            <div><?php include 'include/navbar.php';?></div>
             <div id="layoutSidenav_content">
                 <main>
                     <div class="buttons m-3">

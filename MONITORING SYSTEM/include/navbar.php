@@ -25,7 +25,7 @@
             color: #002233 !important;
         }
     </style>
-
+    <div id="layoutSidenav">
         <div id="layoutSidenav_nav">
             <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
                 <div class="sb-sidenav-menu">
@@ -60,3 +60,4 @@
                 </div>
             </nav>
         </div>
+    </div>

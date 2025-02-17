@@ -1,4 +1,12 @@
-<nav class="sb-topnav navbar navbar-expand navbar-dark" id="topNavBG">
+<?php 
+session_start();
+if (!isset($_SESSION['admin'])) {
+    header("Location: login.php");
+    exit();
+}
+?>
+  
+    <nav class="sb-topnav navbar navbar-expand navbar-dark" id="topNavBG">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-3" href="dashboard.php">Employee Monitoring</a>
         <!-- Sidebar Toggle-->
@@ -15,10 +23,10 @@
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                    <li><a class="dropdown-item" href="#!">Settings</a></li>
+                    <li><a class="dropdown-item" href="settings.php">Settings</a></li>
                     <li><a class="dropdown-item" href="#!">Activity Log</a></li>
                     <li><hr class="dropdown-divider" /></li>
-                    <li><a class="dropdown-item" href="logout.php">Logout</a></li>
+                    <li><a class="dropdown-item" href="login.php">Logout</a></li>
                 </ul>
             </li>
         </ul>

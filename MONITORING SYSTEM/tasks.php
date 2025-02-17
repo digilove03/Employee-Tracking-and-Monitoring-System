@@ -1,8 +1,4 @@
-<?php 
-include 'include/scripts.php'; 
-include 'include/header.php';
-include 'include/navbar.php';
-?>
+<?php include 'include/scripts.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,7 +7,7 @@ include 'include/navbar.php';
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>EMPLOYEE MONITORING AND TRACKING SYSTEM</title>
+    <title>Task Monitoring</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -34,7 +30,6 @@ include 'include/navbar.php';
         color: white;
         text-align: center;
     }
-        
     .btn-delete {
         background: #dc3545;
         color: white;
@@ -49,7 +44,14 @@ include 'include/navbar.php';
 </style>
 </head>
 <body class="sb-nav-fixed">
+
+<?php include 'include/header.php'; ?>
+
 <div id="layoutSidenav">
+    <div id="layoutSidenav_nav">
+        <?php include 'include/navbar.php'; ?>
+    </div>
+
     <div id="layoutSidenav_content">
         <main class="container-fluid">
             <div class="card">
@@ -59,7 +61,6 @@ include 'include/navbar.php';
 
                     <div class="card-body">
                         
-                                      
                     <form id="taskForm" class="row g-3">
     <div class="col-md-3">
         <label for="employeeName" class="form-label">Employee Name</label>
@@ -119,9 +120,9 @@ include 'include/navbar.php';
                         <td>${estimatedTime} hrs</td>
                         <td>
                             <select class="task-status form-select">
-                                <option value="Pending">Pending</option>
                                 <option value="In Progress">In Progress</option>
                                 <option value="Completed">Completed</option>
+                                 <option value="Cancelled">Cancelled</option>
                             </select>
                         </td>
                         <td>

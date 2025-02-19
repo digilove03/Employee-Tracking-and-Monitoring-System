@@ -15,106 +15,183 @@ $result = $conn->query($query);
         <meta name="author" content="" />
         <title>EMPLOYEE TRACKING AND MONITORING SYSTEM</title>
         <style>
-        .dropdown-item:hover {
-             cursor: 
-             pointer; 
-            }
-        .form-container { 
-            width: 400px; 
-            border: 2px solid #ccc; 
-            padding: 15px; 
-            border-radius: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
-         .photo-section { 
-            text-align: center;
-         }
-        .photo-preview { 
-            width: 80px; 
-            height: 80px; 
-            border-radius: 50%; 
-            background-color: #ddd; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            margin-bottom: 5px; 
-        }
-        .input-container { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 3px; width: 100%; 
-        }
-        .input-container input { 
-            width: 95%; 
-            padding: 5px; 
-        }
-        .full-width { 
-            grid-column: span 2; 
-        }
-        .buttons { 
-            display: flex; 
-            justify-content: space-between; 
-            width: 100%; margin-top: 10px; 
-        }
-        .buttons button { 
-            padding: 5px 10px; 
-            border: none; 
-            cursor: pointer; 
-        }
-        .close-btn { 
-            background-color: gray;
-            color: white; }
-        .save-btn { 
-            background-color: blue; 
-            color: white; 
-        }
+      .dropdown-item:hover {
+    cursor: pointer;
+}
 
-        .profile-container {
-             display: flex;
-             flex-direction: column;
-       }
+.form-container {
+    width: 400px;
+    border: 2px solid #ccc;
+    padding: 15px;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
 
-        #profilePreview {
-             width: 145px; /* Adjust size as needed */
-             height: 145px;
-             object-fit: cover;
-             border: 1px solid #ccc;
-             display: block;
-             gap: 5px;
-        }
+/* Photo Section */
+.photo-section {
+    text-align: center;
+}
 
-        #profilePicture {
-            width: 150px; /* Match profilePreview width */
-            margin-top: 5px; /* Reduce gap */
-        }
-         .form-control {
-            border-radius: 5px; 
-        }
-        .modal-footer button {
-             min-width: 100px; 
-            }
-         label { 
-            font-size: 13px; 
-            margin-bottom: 0; 
-            padding-top: 5px; 
-            font-style: italic; 
-        }
-        #addEmployeeModal .modal-dialog {
-             max-width: 60%; 
-            }
-         #addEmployeeModal .modal-body {
-             align-items:center 70vh; 
-             overflow-y: auto; }
-            @media (max-width: 576px) { .col-sm-6, .col-sm-4, .col-sm-3 { width: 100%; } }
-            
+.photo-preview {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #ddd;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
 
+/* Input Fields */
+.input-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+}
+
+.input-container input {
+    width: 100%;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+/* Full Width Input */
+.full-width {
+    grid-column: span 2;
+}
+
+/* Buttons */
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.buttons button {
+    padding: 8px 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+/* Button Colors */
+.close-btn {
+    background-color: gray;
+    color: white;
+}
+
+.save-btn {
+    background-color: blue;
+    color: white;
+}
+
+/* Profile Picture Styling */
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#profilePreview {
+    width: 145px;
+    height: 145px;
+    object-fit: cover;
+    border: 1px solid #ccc;
+    display: block;
+}
+
+#profilePicture {
+    width: 150px;
+    margin-top: 5px;
+}
+
+/* Form Controls */
+.form-control {
+    border-radius: 5px;
+}
+
+.modal-footer button {
+    min-width: 100px;
+}
+
+/* Labels */
+label {
+    font-size: 13px;
+    margin-bottom: 0;
+    padding-top: 5px;
+    font-style: italic;
+}
+
+/* Modal */
+#addEmployeeModal .modal-dialog {
+    max-width: 60%;
+}
+
+#addEmployeeModal .modal-body {
+    align-items: center;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+/* Responsive Fixes */
+@media (max-width: 576px) {
+    .col-sm-6, .col-sm-4, .col-sm-3 {
+        width: 100%;
+    }
+}
+
+/* Search Bar */
+.search-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.search-container input {
+    width: 250px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.search-container button {
+    padding: 8px 12px;
+    border-radius: 5px;
+}
+
+.card-body {
+    display: flex;
+    align-items: center; /* Align icon and text vertically */
+    gap: 15px; /* Increased spacing for better readability */
+    font-size: 14px;
+}
+
+.card-body i {
+    font-size: 50px; /* Adjust icon size */
+    color: #fff; /* Ensures visibility */
+    flex-shrink: 0; /* Prevents resizing */
+}
+
+.card-body .placeholder {
+    color: #ccc; /* Light gray for missing values */
+    font-style: italic;
+}
+
+.info-text p {
+    margin: 3px 0; /* Reduces spacing for a compact look */
+    font-size: 14px; /* Adjust text size */
+}
 </style>
-
-
-        </style>
     </head>
+
+
+    
     <body class="sb-nav-fixed">
 
         <div><?php include 'include/header.php';?></div>
@@ -125,47 +202,74 @@ $result = $conn->query($query);
             
             <div id="layoutSidenav_content">
                 <main>
-                    <div class="container-fluid px-4">
-                        <div class="row">
-                            
-                            <span class="col"></span>
-                            <button class="col col-xl-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">Add new</button>
-                        </div>
-                        <br>
-                        <div class="employee_container">
-                            <div class="row">
-                                <?php while ($row = $result->fetch_assoc()): ?>
-                                    <div class="col-xl-3 col-md-6">
-                                        <div class="card total_employee text-white mb-4">
-                                            <div class="card-body fas fa-id-badge fa-10x"></div>
-                                            <div class="card-footer">
-                                                <center><h1><b><?php echo explode(' ', htmlspecialchars($row['first_name']))[0]; ?></b></h1></center>
-                                                <div class="row">
-                                                    <button class="btn btn-success col"><i class="fas fa-pencil"></i></button>
-                                                    <button class="btn btn-danger col"><i class="fas fa-trash"></i></button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php endwhile; ?>
-                            </div>
-                        </div>
-                    </div>
-                </main>
-                <footer class="py-4 bg-light mt-auto">
-                    <div class="container-fluid px-4">
-                        <div class="d-flex align-items-center justify-content-between small">
-                            <div class="text-muted">Copyright &copy; DASMO 2025</div>
-                            <div>
-                                <a href="#">Privacy Policy</a>
-                                &middot;
-                                <a href="#">Terms &amp; Conditions</a>
-                            </div>
-                        </div>
-                    </div>
-                </footer>
+                <div class="container-fluid px-4">
+    <div class="row align-items-center justify-content-between">
+        <!-- Search Bar -->
+        <div class="col-md-auto">
+            <div class="search-container">
+                <input type="text" id="searchBox" class="form-control" placeholder="Search employee...">
+                <button class="btn btn-primary" onclick="searchEmployee()"><i class="fas fa-search"></i> Search</button>
             </div>
         </div>
+
+        <!-- Add New Employee Button -->
+        <div class="col-md-auto">
+            <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
+                <i class="fas fa-user-plus"></i> Add New
+            </button>
+        </div>
+    </div>
+
+    <br>
+
+    <!-- Employee Cards -->
+    <div class="employee_container">
+        <div class="row">
+            <?php while ($row = $result->fetch_assoc()): ?>
+                <div class="col-xl-3 col-md-6">
+                    <div class="card total_employee text-white mb-4">
+                   
+                    <div class="card-body d-flex align-items-center text-white">
+                    <i class="fas fa-id-badge me-3"></i> <!-- ID Badge Icon -->
+                    <div class="info-text">
+                    <p><strong>Name:</strong> 
+                    <?php echo htmlspecialchars($row['first_name'] . ' ' . $row['last_name']); ?>
+                    </p>
+                    <p><strong>Position:</strong> 
+                    <?php echo !empty($row['position']) ? htmlspecialchars($row['position']) : '<span class="placeholder">N/A</span>'; ?>
+                    </p>
+                    <p><strong>Status:</strong> 
+<?php echo !empty($row['status']) ? htmlspecialchars($row['status']) : '<span class="placeholder">N/A</span>'; ?>
+                    </p>
+    </div>
+</div>
+                    
+                        <div class="card-footer">
+                            <div class="row button-group">
+                                <button class="btn btn-info col"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-warning col"><i class="fas fa-pencil-alt"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="py-4 bg-light mt-auto">
+    <div class="container-fluid px-4">
+        <div class="d-flex align-items-center justify-content-between small">
+            <div class="text-muted">Copyright &copy; DASMO 2025</div>
+            <div>
+                <a href="#">Privacy Policy</a> &middot; <a href="#">Terms &amp; Conditions</a>
+            </div>
+        </div>
+    </div>
+</footer>
+
+
 
          <!-- Modal -->
         
@@ -272,10 +376,8 @@ $result = $conn->query($query);
                 <div class="modal-footer">
                     <button type="button" class="btn close-btn" data-bs-dismiss="modal">Close</button>
                     <button type="submit" class="btn save-btn">Save</button>
-                </div>
-                            
+                </div>     
             </form>
-            
         </div>
     </div>
 </div>

@@ -1,7 +1,7 @@
 <?php 
 session_start();
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: index.php");
+if (!isset($_SESSION['admin'])) {
+    header("Location: login.php");
     exit();
 }
 ?>
@@ -14,8 +14,7 @@ if (!isset($_SESSION['admin_id'])) {
         <!-- Navbar Search-->
         <form class="d-none d-md-inline-block form-inline ms-auto me-0 me-md-3 my-2 my-md-0">
             <div class="input-group">
-                <input class="form-control" type="text" placeholder="Search for..." aria-label="Search for..." aria-describedby="btnNavbarSearch" />
-                <button class="btn btn-primary" id="btnNavbarSearch" type="button"><i class="fas fa-search"></i></button>
+              
             </div>
         </form>
         <!-- Navbar-->

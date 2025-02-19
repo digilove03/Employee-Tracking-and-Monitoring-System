@@ -1,21 +1,40 @@
-<?php
+<?php 
 require 'db_connect.php'; // Include database connection
+
+header('Content-Type: application/json');
+
+$response = array('success' => false);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Get data from the form
-    $firstName = htmlspecialchars(trim($_POST['firstName']));
-    $lastName = htmlspecialchars(trim($_POST['lastName']));
-    $middleName = htmlspecialchars(trim($_POST['middleName']));
-    $sex = htmlspecialchars(trim($_POST['employeeSex']));
-    $date_of_birth = htmlspecialchars(trim($_POST['employeeDate_of_Birth']));
-    $address = htmlspecialchars(trim($_POST['employeeAddress']));
-    $position = htmlspecialchars(trim($_POST['employeePosition']));
-    $department = htmlspecialchars(trim($_POST['employeeDepartment']));
-    $civil_status = htmlspecialchars(trim($_POST['employeeCivilStatus']));
-    $hiring_date = htmlspecialchars(trim($_POST['employeeHiredDate']));
-    $contact_number = htmlspecialchars(trim($_POST['employeeContactNum']));
-    $emailAdd = htmlspecialchars(trim($_POST['emailAdd']));
-    $age = filter_var($_POST['employeeAge'], FILTER_VALIDATE_INT);
+    $firstName     = htmlspecialchars(trim($_POST['firstName']));
+    $lastName      = htmlspecialchars(trim($_POST['lastName']));
+    $middleName    = htmlspecialchars(trim($_POST['middleName'])); 
+    $suffix        = htmlspecialchars(trim($_POST['suffix'])); 
+    $sex           = htmlspecialchars(trim($_POST['sex']));
+    $birthdate     = htmlspecialchars(trim($_POST['birthdate']));
+    $address       = htmlspecialchars(trim($_POST['address']));
+    $position      = htmlspecialchars(trim($_POST['position']));
+    $department    = htmlspecialchars(trim($_POST['department']));
+    $civilStatus   = htmlspecialchars(trim($_POST['civilStatus']));
+    $hiredDate     = htmlspecialchars(trim($_POST['hiredDate']));
+    $contactNumber = htmlspecialchars(trim($_POST['contactNumber']));
+    $email         = htmlspecialchars(trim($_POST['email']));
+    $religion      = htmlspecialchars(trim($_POST['religion'])); 
+
+    // Check if the email already exists
+    $checkQuery = "SELECT id FROM employee WHERE email_address = ?";
+    $checkStmt = $conn->prepare($checkQuery);
+    $checkStmt->bind_param("s", $email);
+    $checkStmt->execute();
+    $checkStmt->store_result();
+
+    if ($checkStmt->num_rows > 0) {
+        $response['error'] = "This email address is already registered.";
+        echo json_encode($response);
+        exit;
+    }
+    $checkStmt->close();
 
     // Handle Image Upload
     $uploadDir = 'emp_profile/' . $firstName . '_' . $lastName . '/'; // Employee-specific folder
@@ -33,20 +52,48 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $photoPath = $targetPath;
         }
     }
+    
+    // Set a default photo path if no image is uploaded
+    if ($photoPath === null) {
+        $photoPath = 'emp_profile/default.png';
+    }
 
     // Prepare SQL query
-    $stmt = $conn->prepare("INSERT INTO employee (first_name, last_name, middle_name, sex, birthdate, address, position, department, civil_status, hiring_date, contact_number, email_address, age, photo_path) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-    $stmt->bind_param("ssssssssssisis", $firstName, $lastName, $middleName, $sex, $date_of_birth, $address, $position, $department, $civil_status, $hiring_date, $contact_number, $emailAdd, $age, $photoPath);
+    $stmt = $conn->prepare("INSERT INTO employee (first_name, last_name, middle_name, suffix, sex, birthdate, address, position, department, civil_status, hiring_date, contact_number, email_address, photo_path, religion) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    if (!$stmt) {
+        $response['error'] = "Prepare failed: " . $conn->error;
+        echo json_encode($response);
+        exit;
+    }
+    
+    $stmt->bind_param("sssssssssssisss", 
+        $firstName, 
+        $lastName, 
+        $middleName, 
+        $suffix, 
+        $sex, 
+        $birthdate, 
+        $address, 
+        $position, 
+        $department, 
+        $civilStatus, 
+        $hiredDate, 
+        $contactNumber, 
+        $email, 
+        $photoPath, 
+        $religion
+    );
 
     // Execute and check for success
     if ($stmt->execute()) {
-        echo "New employee added successfully!";
-        header("Location: employees.php");
+        $response['success'] = true;
     } else {
-        echo "Error: " . $stmt->error;
+        $response['error'] = "Database Error: " . $stmt->error;
     }
 
     $stmt->close();
     $conn->close();
+
+    echo json_encode($response);
 }
 ?>

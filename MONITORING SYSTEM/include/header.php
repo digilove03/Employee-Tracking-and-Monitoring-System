@@ -1,12 +1,4 @@
-<?php 
-session_start();
-if (!isset($_SESSION['admin'])) {
-    header("Location: login.php");
-    exit();
-}
-?>
-  
-    <nav class="sb-topnav navbar navbar-expand navbar-dark" id="topNavBG">
+   <nav class="sb-topnav navbar navbar-expand navbar-dark" id="topNavBG">
         <!-- Navbar Brand-->
         <a class="navbar-brand ps-3" href="dashboard.php">Employee Monitoring</a>
         <!-- Sidebar Toggle-->

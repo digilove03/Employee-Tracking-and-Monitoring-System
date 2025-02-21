@@ -8,7 +8,6 @@ if (!isset($_SESSION['admin_id'])) {
 
 include ('include/scripts.php');
 include ('include/header.php');
-include 'include/navbar.php';
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -49,7 +48,12 @@ th {
     </style>
 </head>
 <body class="sb-nav-fixed">
+
     <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <?php include 'include/navbar.php'; ?>
+        </div>
+
         <div id="layoutSidenav_content">
             <main>
                 <div class="container-fluid px-4">

@@ -1,17 +1,30 @@
 <?php 
 session_start();
-include('db_connect.php');
+require('db_connect.php');
+
 if (!isset($_SESSION['admin_id'])) {
     header("Location: index.php");
     exit();
 }
 
-include ('include/scripts.php');
-include ('include/header.php');
-// Fetch employee data
-$query = "SELECT * FROM employee ORDER BY id ASC";
-$result = $conn->query($query);
+$admin_id = $_SESSION['admin_id'];
+$department = '';
+
+// Fetch admin's department
+$query = "SELECT department FROM admin WHERE id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $admin_id);
+$stmt->execute();
+$stmt->bind_result($department);
+$stmt->fetch();
+$stmt->close();
+
+include('include/scripts.php');
+include('include/header.php');
+include('include/navbar.php');
 ?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -22,122 +35,276 @@ $result = $conn->query($query);
     <meta name="author" content="" />
     <title>EMPLOYEE TRACKING AND MONITORING SYSTEM</title>
     <style>
-        .dropdown-item:hover { cursor: pointer; }
-        .form-container { 
-            width: 400px; 
-            border: 2px solid #ccc; 
-            padding: 15px; 
-            border-radius: 10px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
+        .dropdown-item:hover {
+            cursor: pointer;
         }
-        .photo-section { text-align: center; }
-        .photo-preview { 
-            width: 80px; 
-            height: 80px; 
-            border-radius: 50%; 
-            background-color: #ddd; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            margin-bottom: 5px; 
+
+        .form-container {
+            width: 400px;
+            border: 2px solid #ccc;
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        .input-container { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 3px; 
-            width: 100%; 
+
+        .photo-section {
+            text-align: center;
         }
-        .input-container input { 
-            width: 95%; 
-            padding: 5px; 
+
+        .photo-preview {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 5px;
         }
-        .full-width { grid-column: span 2; }
-        .buttons { 
-            display: flex; 
-            justify-content: space-between; 
-            width: 100%; 
-            margin-top: 10px; 
+
+
+        .input-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            width: 100%;
         }
-        .buttons button { padding: 5px 10px; border: none; cursor: pointer; }
-        .close-btn { background-color: gray; color: white; }
-        .save-btn { background-color: blue; color: white; }
-        .profile-container { display: flex; flex-direction: column; }
-        #profilePreview { 
-            width: 145px; 
+
+        .input-container input {
+            width: 100%;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+
+        .buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .buttons button {
+            padding: 8px 12px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+
+        .close-btn {
+            background-color: gray;
+            color: white;
+        }
+
+        .save-btn {
+            background-color: blue;
+            color: white;
+        }
+
+        .profile-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        #profilePreview {
+            width: 145px;
             height: 145px;
             object-fit: cover;
             border: 1px solid #ccc;
             display: block;
-            gap: 5px;
         }
-        #profilePicture { width: 150px; margin-top: 5px; }
-        .form-control { border-radius: 5px; }
-        .modal-footer button { min-width: 100px; }
-        label { 
-            font-size: 13px; 
-            margin-bottom: 0; 
-            padding-top: 5px; 
-            font-style: italic; 
+
+        #profilePicture {
+            width: 150px;
+            margin-top: 5px;
         }
-        #addEmployeeModal .modal-dialog { max-width: 60%; }
-        #addEmployeeModal .modal-body { 
+
+        /* Form Controls */
+        .form-control {
+            border-radius: 5px;
+        }
+
+        .modal-footer button {
+            min-width: 100px;
+        }
+
+        label {
+            font-size: 13px;
+            margin-bottom: 0;
+            padding-top: 5px;
+            font-style: italic;
+        }
+
+
+        #addEmployeeModal .modal-dialog {
+            max-width: 60%;
+        }
+
+        #addEmployeeModal .modal-body {
+            align-items: center;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+
+        @media (max-width: 576px) {
+            .col-sm-6, .col-sm-4, .col-sm-3 {
+                width: 100%;
+            }
+        }
+
+        .search-container {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .search-container input {
+            width: 250px;
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .search-container button {
+            padding: 8px 12px;
+            border-radius: 5px;
+        }
+
+        .card-body {
+            display: flex;
             align-items: center; 
-            max-height: 70vh; 
-            overflow-y: auto; 
+            gap: 15px; 
+            font-size: 14px;
         }
-        @media (max-width: 576px) { .col-sm-6, .col-sm-4, .col-sm-3 { width: 100%; } }
+
+        .card-body i {
+            font-size: 50px; 
+            color: #fff; 
+            flex-shrink: 0; 
+        }
+
+        .card-body .placeholder {
+            color: #ccc; 
+            font-style: italic;
+        }
+
+        .info-text p {
+            margin: 3px 0; 
+            font-size: 14px; 
+        }
+
+        .searchBTN {
+            border: 0;
+        }
     </style>
+
 </head>
 <body class="sb-nav-fixed">
-    <div><?php include 'include/header.php'; ?></div>
-    
     <div id="layoutSidenav">
-        <div><?php include 'include/navbar.php'; ?></div>
         
         <div id="layoutSidenav_content">
-            <main>
-                <div class="container-fluid px-4">
-                    <div class="row">
-                        <span class="col"></span>
-                        <button class="col col-xl-1 btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">Add new</button>
+    <main>
+        <div class="container-fluid px-4">
+            <!-- Row for Add New Button (Aligned Right) -->
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
+                        <i class="fas fa-user-plus"></i> Add New
+                    </button>
+                </div>
+            </div>
+
+            <!-- Line Break -->
+            <br>
+
+            <!-- Row for Search Bar (Aligned Left) -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="input-group d-flex align-items-center">
+                        <input type="text" id="searchBox" class="h-100 form-control" placeholder="Search employee...">
+                        <button class="btn btn-primary searchBTN" onclick="searchEmployee()">
+                            <i class="fas fa-search"></i> Search
+                        </button>
                     </div>
-                    <br>
-                    <div class="employee_container">
-                        <div class="row">
-                            <?php while ($row = $result->fetch_assoc()): ?>
-                                <div class="col-xl-3 col-md-6">
-                                    <div class="card total_employee text-white mb-4">
-                                        <div class="card-body fas fa-id-badge fa-10x"></div>
-                                        <div class="card-footer">
-                                            <center><h1><b><?php echo explode(' ', htmlspecialchars($row['first_name']))[0]; ?></b></h1></center>
-                                            <div class="row">
-                                                <button class="btn btn-success col"><i class="fas fa-pencil"></i></button>
-                                                <button class="btn btn-danger col"><i class="fas fa-trash"></i></button>
-                                            </div>
-                                        </div>
-                                    </div>
+                </div>
+            </div>
+
+            <!-- Line Break -->
+            <br>
+
+            <!-- Employee Cards -->
+            <div class="employee_container">
+                <div class="row">
+                    <?php 
+                    // Fetch employee data
+                    $query = "SELECT *, TIMESTAMPDIFF(YEAR, birthdate, CURDATE()) AS age FROM employee ORDER BY id ASC";
+                    $result = $conn->query($query); 
+
+                    if ($result && $result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            $photoPath = !empty($row['photo_path']) ? htmlspecialchars($row['photo_path']) : 'emp_profile/default.png';
+                            $name = htmlspecialchars($row['first_name'] . ' ' . $row['last_name']);
+                            $position = !empty($row['position']) ? htmlspecialchars($row['position']) : 'N/A';
+                            $status = !empty($row['status']) ? htmlspecialchars($row['status']) : 'N/A';
+                    ?>                                
+                    <div class="col-xl-4 col-md-6 mb-4">
+                        <div class="card total_employee text-white mb-4">
+                            <div class="card-body d-flex align-items-center">
+                                <!-- Employee Photo -->
+                                <img src="<?php echo $photoPath; ?>" 
+                                    alt="Profile Picture"
+                                    style="width: 50px; height: 50px; object-fit: cover;">
+
+                                <!-- Employee Info -->
+                                <div class="flex-grow-1 ms-3">
+                                    <p class="mb-1"><strong>Name:</strong> <?php echo $name; ?></p>
+                                    <p class="mb-1"><strong>Position:</strong> <?php echo $position; ?></p>
+                                    <p class="mb-1"><strong>Status:</strong> <?php echo $status; ?></p>
                                 </div>
-                            <?php endwhile; ?>
+                            </div>
+                            
+                            <!-- Card Footer with Buttons -->
+                            <div class="card-footer">
+                                <div class="row g-1">
+                                <button class="btn btn-info col viewEmployeeBtn" data-id="<?php echo $row['id']; ?>" data-bs-toggle="modal" data-bs-target="#viewEmployeeModal"><i class="fas fa-eye"></i></button>
+                                <button class="btn btn-warning col editEmployeeBtn" data-id="<?php echo $row['id']; ?>" data-bs-toggle="modal" data-bs-target="#editEmployeeModal"><i class="fas fa-pencil-alt"></i></button>
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    <?php 
+                        }
+                    } else {
+                        echo "<p class='text-center text-muted'>No employees found!</p>";
+                    }
+                    ?>
                 </div>
-            </main>
-            <footer class="py-4 bg-light mt-auto">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; DASMO 2025</div>
-                        <div>
-                            <a href="#">Privacy Policy</a>
-                            &middot;
-                            <a href="#">Terms &amp; Conditions</a>
-                        </div>
-                    </div>
-                </div>
-            </footer>
+            </div>
         </div>
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-4 bg-light mt-auto">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between small">
+                <div class="text-muted">Copyright &copy; DASMO 2025</div>
+                <div>
+                    <a href="#">Privacy Policy</a> &middot; <a href="#">Terms &amp; Conditions</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</div>
 
     <!-- Modal -->
     <div class="modal fade" id="addEmployeeModal" tabindex="-1" aria-labelledby="addEmployeeModalLabel" aria-hidden="true">
@@ -242,7 +409,7 @@ $result = $conn->query($query);
                         <div class="row">
                             <div class="col-sm-4">
                                 <label for="department">Department</label>
-                                <input type="text" class="form-control" id="department" name="department" required>
+                                <input type="text" class="form-control" id="department" name="department" value="<?php echo htmlspecialchars($department); ?>" readonly style="color: black; background-color: lightgray;">
                             </div>
                             <div class="col-sm-4">
                                 <label for="position">Position</label>
@@ -322,7 +489,26 @@ $result = $conn->query($query);
                 }
             });
         });
-    </script>
+        function searchEmployee() {
+        let searchValue = document.getElementById('searchBox').value.trim();
+
+        // Send AJAX request
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", "search_employee.php", true);
+        xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                document.querySelector(".employee_container .row").innerHTML = xhr.responseText;
+            }
+        };
+        xhr.send("search=" + encodeURIComponent(searchValue));
+        }
+
+        // Trigger search on input change
+        document.getElementById('searchBox').addEventListener("keyup", function () {
+            searchEmployee();
+        });
+        </script>
 </body>
 </html>
 <?php $conn->close(); ?>

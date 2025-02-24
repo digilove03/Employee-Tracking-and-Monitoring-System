@@ -1,13 +1,21 @@
 <?php 
 session_start();
 include('db_connect.php');
+
 if (!isset($_SESSION['admin_id'])) {
     header("Location: index.php");
     exit();
 }
 
-include ('include/scripts.php');
-include ('include/header.php');
+include('include/scripts.php');
+include('include/header.php');
+
+$query = "SELECT t.*, 
+                 CONCAT(e.first_name, ' ', LEFT(e.middle_name, 1), '. ', e.last_name) AS employee_name
+          FROM tasks t
+          JOIN employee e ON t.employee_id = e.id
+          ORDER BY t.time_started DESC";
+$result = $conn->query($query);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -15,9 +23,7 @@ include ('include/header.php');
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <meta name="description" content="" />
-  <meta name="author" content="" />
-  <title>Task Monitoring</title>
+  <title>EMPLOYEE TRACKING AND MONITORING SYSTEM</title>
   <!-- Flatpickr CSS for date/time picker -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <!-- Bootstrap CSS -->
@@ -57,26 +63,9 @@ include ('include/header.php');
     .btn-delete:hover {
       background: #c82333;
     }
-    /* Style for the service tag box */
-    .service-tag {
-      display: inline-block;
-      background: #e2e6ea;
-      border: 1px solid #adb5bd;
-      border-radius: 15px;
-      padding: 5px 10px;
-      margin: 3px;
-      font-size: 0.9em;
-    }
-    .service-tag .remove-tag {
-      margin-left: 8px;
-      cursor: pointer;
-      color: red;
-    }
   </style>
 </head>
 <body class="sb-nav-fixed">
-
-<?php include 'include/header.php'; ?>
 
 <div id="layoutSidenav">
   <div id="layoutSidenav_nav">
@@ -97,8 +86,8 @@ include ('include/header.php');
                 <option value="">Select Employee</option>
                 <?php
                   $query = "SELECT id, last_name, first_name FROM employee ORDER BY last_name ASC";
-                  $result = mysqli_query($conn, $query);
-                  while ($row = mysqli_fetch_assoc($result)) {
+                  $employeeResult = mysqli_query($conn, $query);
+                  while ($row = mysqli_fetch_assoc($employeeResult)) {
                     echo '<option value="' . $row['id'] . '">' . $row['last_name'] . ', ' . $row['first_name'] . '</option>';
                   }
                 ?>
@@ -142,7 +131,7 @@ include ('include/header.php');
               <input type="datetime-local" id="estimatedTime" class="form-control" required>
             </div>
             
-            <!-- New Role select field -->
+            <!-- Role select field -->
             <div class="col-md-2">
               <label for="role" class="form-label">Role</label>
               <select id="role" class="form-select" required>
@@ -155,7 +144,7 @@ include ('include/header.php');
                 <option value="substitute supervisor">Substitute Supervisor</option>
               </select>
             </div>
-            
+
             <div class="col-md-2 d-grid">
               <button type="submit" class="btn btn-primary mt-4">Assign Task</button>
             </div>
@@ -166,15 +155,34 @@ include ('include/header.php');
             <table class="table table-bordered text-center">
               <thead>
                 <tr>
+                  <th>Record Number</th>
                   <th>Employee</th>
-                  <th>Task</th>
-                  <th>Deadline</th>
+                  <th>Service</th>
+                  <th>Req. Office/ Dept.</th>
                   <th>Status</th>
                   <th>Actions</th>
                 </tr>
               </thead>
-              <tbody id="taskList">
-                <!-- Task rows will be appended here -->
+              <tbody>
+                <?php while ($row = $result->fetch_assoc()): ?>
+                  <tr>
+                    <td><?= htmlspecialchars($row['record_number']) ?></td>
+                    <td><?= htmlspecialchars($row['employee_name']) ?></td>
+                    <td><?= htmlspecialchars($row['service']) ?></td>
+                    <td><?= htmlspecialchars($row['location']) ?></td>
+                    <td class="service_status" style="color: 
+                        <?php 
+                            echo ($row['service_status'] === 'Ongoing') ? 'blue' : 
+                                ($row['service_status'] === 'Completed' ? 'green' : 'red'); 
+                        ?>
+                    ">
+                        <?= htmlspecialchars($row['service_status']) ?>
+                    </td>
+                    <td> 
+                      <button class="btn btn-primary btn-view">View</button> 
+                    </td>
+                  </tr>
+                <?php endwhile; ?>
               </tbody>
             </table>
           </div>
@@ -186,13 +194,13 @@ include ('include/header.php');
 
 <script>
 $(document).ready(function() {
-  // Initialize Flatpickr for the #estimatedTime input with date and time enabled.
+  // Initialize Flatpickr for estimated time input
   flatpickr("#estimatedTime", {
     enableTime: true,
     dateFormat: "Y-m-d H:i",
     time_24hr: true
   });
-  
+
   // Show/hide the Others input based on dropdown selection for services.
   $("#serviceSelect").change(function() {
     if ($(this).val() === "Others") {
@@ -282,27 +290,6 @@ $(document).ready(function() {
         time_started: timeStarted
       },
       success: function(response) {
-        // Optionally, you can check response for errors.
-        // Add the new task row to the table.
-        let newRow = `
-          <tr>
-            <td>${employeeText}</td>
-            <td>${serviceText}</td>
-            <td>${deadline}</td>
-            <td>
-              <select class="task-status form-select">
-                <option value="In Progress">Ongoing</option>
-                <option value="Completed">Completed</option>
-                <option value="Cancelled">Cancelled</option>
-              </select>
-            </td>
-            <td>
-              <button class="btn-delete">Delete</button>
-            </td>
-          </tr>
-        `;
-        $("#taskList").append(newRow);
-
         // Reset form fields and clear selected services.
         $("#taskForm")[0].reset();
         selectedServices = [];
@@ -319,12 +306,6 @@ $(document).ready(function() {
         alert("An error occurred while saving the task.");
       }
     });
-  });
-
-  // Change task status color based on selection.
-  $(document).on("change", ".task-status", function() {
-    let status = $(this).val();
-    $(this).css("color", status === "Ongoing" ? "blue" : status === "Completed" ? "green" : "red");
   });
 
 });

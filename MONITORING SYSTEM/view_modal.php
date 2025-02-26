@@ -31,7 +31,7 @@ if (isset($_POST['id'])) {
         echo json_encode([
             "success" => true,
             "photo" => $photoPath,
-            "name" => htmlspecialchars($row['first_name'] . ' ' . $row['last_name']),
+            "name" => htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name'] . ' ' . $row['suffix']),
             "sex" => htmlspecialchars($row['sex']),
             "birthdate" => htmlspecialchars($row['birthdate']),
             "address" => htmlspecialchars($row['address']),

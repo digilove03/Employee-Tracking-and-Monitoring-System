@@ -431,6 +431,44 @@ include('include/navbar.php');
         </div>
     </div>
 
+
+    
+        <!-- View Employee Modal -->
+    <div class="modal fade" id="viewEmployeeModal" tabindex="-1" aria-labelledby="viewEmployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="viewEmployeeModalLabel">Employee Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Profile Picture -->
+                    <img src="emp_profile/default.png" class="employee-photo img-fluid rounded-circle mb-3" 
+                         style="width: 100px; height: 100px; object-fit: cover;">
+                    
+                    <p><strong>Name:</strong> <span id="employeeName"></span></p>
+                    <p><strong>Sex:</strong> <span id="employeeSex"></span></p>
+                    <p><strong>Date of Birth:</strong> <span id="employeeDOB"></span></p>
+                    <p><strong>Address:</strong> <span id="employeeAddress"></span></p>
+                    <p><strong>religion:</strong> <span id="employeeReligion"></span></p>
+                    <p><strong>Position:</strong> <span id="employeePosition"></span></p>
+                    <p><strong>Department:</strong> <span id="employeeDepartment"></span></p>
+                    <p><strong>Civil Status:</strong> <span id="employeeCivilStatus"></span></p>
+                    <p><strong>Hired Date:</strong> <span id="employeeHiredDate"></span></p>
+                    <p><strong>Contact Number:</strong> <span id="employeeContact"></span></p>
+                    <p><strong>Email Addres:</strong> <span id="employeeEmail"></span></p>
+                    <p><strong>Status:</strong> <span id="employeeStatus"></span></p>
+
+                    <p><strong>Age:</strong> <span id="employeeAge"></span></p>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function previewImage(event) {
@@ -508,6 +546,46 @@ include('include/navbar.php');
         document.getElementById('searchBox').addEventListener("keyup", function () {
             searchEmployee();
         });
+
+
+        //viewEmployee modal
+        $(document).ready(function() {
+            $(".viewEmployeeBtn").click(function() {
+            let employeeId = $(this).data("id");
+
+            // Make AJAX request to fetch employee details
+            $.ajax({
+                url: "view_modal.php",  // Backend PHP file
+                type: "POST",
+                data: { id: employeeId },
+                dataType: "json",
+                success: function(response) {
+                    if (response.success) {
+                        $(".employee-photo").attr("src", response.photo);
+                        $("#employeeName").text(response.name);
+                        $("#employeeSex").text(response.sex);
+                        $("#employeeDOB").text(response.birthdate);
+                        $("#employeeAddress").text(response.address);
+                        $("#employeeReligion").text(response.religion);
+                        $("#employeePosition").text(response.position);
+                        $("#employeeDepartment").text(response.department);
+                        $("#employeeCivilStatus").text(response.civilStatus);
+                        $("#employeeHiredDate").text(response.hireDate);
+                        $("#employeeContact").text(response.contactNum);
+                        $("#employeeEmail").text(response.email);
+                        $("#employeeStatus").text(response.status);
+                        $("#employeeAge").text(response.age);
+                    } else {
+                        alert("Failed to fetch employee details.");
+                    }
+                }, 
+                error: function() {
+                    alert("Error connecting to server.");
+                }
+            });
+            });
+        });
+
         </script>
 </body>
 </html>

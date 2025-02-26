@@ -1,8 +1,8 @@
 <style>
     .timeDiv{
-        width: 73%;
+        width: 100%;
         display:flex;
-        justify-content:end;
+        justify-content:center;
     }
     .showTime {
         height: 100%;

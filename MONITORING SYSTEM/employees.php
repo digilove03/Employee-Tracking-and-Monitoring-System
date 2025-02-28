@@ -450,7 +450,7 @@ include('include/navbar.php');
                     <p><strong>Sex:</strong> <span id="employeeSex"></span></p>
                     <p><strong>Date of Birth:</strong> <span id="employeeDOB"></span></p>
                     <p><strong>Address:</strong> <span id="employeeAddress"></span></p>
-                    <p><strong>religion:</strong> <span id="employeeReligion"></span></p>
+                    <p><strong>Religion:</strong> <span id="employeeReligion"></span></p>
                     <p><strong>Position:</strong> <span id="employeePosition"></span></p>
                     <p><strong>Department:</strong> <span id="employeeDepartment"></span></p>
                     <p><strong>Civil Status:</strong> <span id="employeeCivilStatus"></span></p>

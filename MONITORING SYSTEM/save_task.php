@@ -26,12 +26,8 @@ $role         = $_POST['role'];
 $deadline     = $_POST['deadline'];
 $time_started = $_POST['time_started'];
 
-// Generate a unique record number (adjust as needed to meet your 16-character limit).
-// uniqid() returns a 13-character unique string by default; you can append or trim as needed.
-$record_number = substr(uniqid(), 0, 16);
-
 // Prepare the SQL statement with the record_number included.
-$stmt = $conn->prepare("INSERT INTO tasks (record_number, employee_id, service, location, role, deadline, time_started) VALUES (?, ?, ?, ?, ?, ?, ?)");
+$stmt = $conn->prepare("INSERT INTO tasks (employee_id, service, location, role, deadline, time_started) VALUES (?, ?, ?, ?, ?, ?)");
 if (!$stmt) {
     $response["message"] = "Prepare failed: " . $conn->error;
     ob_clean();
@@ -40,9 +36,17 @@ if (!$stmt) {
 }
 
 // Bind parameters. Here record_number is a string, employee_id is integer, and the rest are strings.
-$stmt->bind_param("sisssss", $record_number, $employee_id, $service, $location, $role, $deadline, $time_started);
+$stmt->bind_param("isssss", $employee_id, $service, $location, $role, $deadline, $time_started);
 
 if ($stmt->execute()) {
+    // Update the employee's status to "Working"
+    $updateStmt = $conn->prepare("UPDATE employee SET status = 'Working' WHERE id = ?");
+    if ($updateStmt) {
+        $updateStmt->bind_param("i", $employee_id);
+        $updateStmt->execute();
+        $updateStmt->close();
+    }
+    
     $response["status"] = "success";
 } else {
     $response["message"] = "Database Error: " . $stmt->error;

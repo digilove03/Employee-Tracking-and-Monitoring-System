@@ -1,17 +1,17 @@
 <style>
     .timeDiv {
-        width: 100%;
         display: flex;
-        justify-content: center;
+        align-items: center;
+        justify-content: flex-end; /* Aligns content to the right */
+        flex-grow: 1; /* Pushes time to the right */
+        margin-right: 20px; /* Adds spacing from the navbar items */
     }
     .showTime {
-        height: 100%;
-        width: 100px;
         display: flex;
         flex-direction: column;
-        justify-content: right;
-        align-items: right;
+        align-items: flex-end; /* Aligns text inside the div to the right */
         color: white;
+        font-size: 14px; /* Adjust text size */
     }
 </style>
 
@@ -44,14 +44,14 @@
     document.addEventListener("DOMContentLoaded", updateDateTime);
 </script>
 
-<nav class="sb-topnav navbar navbar-expand navbar-dark" id="topNavBG">
+<nav class="sb-topnav navbar navbar-expand navbar-dark d-flex" id="topNavBG">
     <!-- Navbar Brand-->
     <a class="navbar-brand ps-3" href="dashboard.php">Employee Monitoring</a>
     <!-- Sidebar Toggle-->
     <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!">
         <i class="fas fa-bars"></i>
     </button>
-    
+
     <!-- Time Display -->
     <div class="timeDiv">
         <div class="showTime">
@@ -59,9 +59,9 @@
             <span id="currentTime"></span>
         </div>
     </div>
-    
+
     <!-- Navbar -->
-    <ul class="navbar-nav ms-auto" style="margin: 25px;">
+    <ul class="navbar-nav" style="margin: 25px;">
         <li class="nav-item dropdown">
             <a class="dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                 <i class="fas fa-user fa-fw"></i>

@@ -63,6 +63,12 @@ $result = $conn->query($query);
     .btn-delete:hover {
       background: #c82333;
     }
+#addServiceBtn {
+    font-size: 0.8rem; /* Makes the text smaller */
+    padding: 4px 8px; /* Reduces button size */
+    display: flex;
+    justify-content: flex-end;
+}
   </style>
 </head>
 <body class="sb-nav-fixed">
@@ -116,7 +122,7 @@ $result = $conn->query($query);
               <!-- "Others" input (hidden by default) -->
               <input type="text" id="otherService" class="form-control mt-2 d-none" placeholder="Please specify other service">
               <!-- Button to add the selected service -->
-              <button type="button" id="addServiceBtn" class="btn btn-secondary mt-2">Add Service</button>
+              <button type="button" id="addServiceBtn" class="btn btn-info mt-2">Add Service</button>
               <!-- Container for added service tags -->
               <div id="selectedServices" class="mt-2"></div>
             </div>

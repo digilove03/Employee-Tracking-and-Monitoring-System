@@ -23,6 +23,22 @@
         background-color: white;
         color: #002233 !important;
     }
+    .sb-sidenav {
+    background-color: #4682B4 !important; /* Steel Blue */
+}
+
+.sb-sidenav .nav-link {
+    color: white;
+}
+
+.sb-sidenav .nav-link:hover {
+    background-color: #5A9BD3; /* Lighter Steel Blue */
+    color: white;
+}
+.sb-sidenav-footer {
+    background-color: #36648B !important; /* Dark Steel Blue */
+    color: white;
+}
 </style>
 
 <?php 

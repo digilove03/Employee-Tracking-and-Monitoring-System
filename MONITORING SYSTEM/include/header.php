@@ -13,6 +13,9 @@
         color: white;
         font-size: 14px; /* Adjust text size */
     }
+    #topNavBG {
+    background-color: #1E3A8A !important; /* Deep Navy Blue */
+}
 </style>
 
 <script>

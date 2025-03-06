@@ -522,7 +522,7 @@ include('include/navbar.php');
                         </div>
                         <!-- Profile Photo on Right -->
                         <div class="col-4 text-center">
-                            <img src="emp_profile/default.png" class="id-photo">
+                            <img src="emp_profile/default.png" class="employee-photo id-photo">
                         </div>
                     </div>
                 </div>

@@ -185,6 +185,7 @@ include('include/navbar.php');
             align-items: center; 
             gap: 15px; 
             font-size: 14px;
+            background-color:rgb(4, 92, 165)
         }
 
         .card-body i {
@@ -206,6 +207,68 @@ include('include/navbar.php');
         .searchBTN {
             border: 0;
         }
+    
+
+        .modal-lg {
+        max-width: 800px; /* Increased width */
+    }
+    
+    .modal-md {
+        max-width: 500px; /* ID Card Size */
+    }
+
+    .custom-id-card {
+        border-radius: 10px;
+        border: 2px solid #007bff;
+        background: #f8f9fa;
+        padding: 20px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .id-card-header {
+        background: #007bff;
+        color: white;
+        padding: 10px;
+        border-radius: 8px 8px 0 0;
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .id-card-body {
+        padding: 15px;
+    }
+
+    .id-photo {
+        width: 100px;
+        height: 100px;
+        object-fit: cover;
+        border-radius: 30%;
+        border: 3px solid #007bff;
+        margin-top: 10px;
+    }
+
+    .id-card-footer {
+        background: #e9ecef;
+        padding: 10px;
+        text-align: center;
+        font-size: 14px;
+        border-radius: 0 0 8px 8px;
+    }
+
+    .id-card-body p {   
+        font-size: 14px;
+        margin: 5px 0;
+        font-weight: 500;
+    }
+    .btn-info {
+    background-color:rgb(78, 171, 252) !important; /* Darker Blue */
+    border-color: #0a58ca !important; /* Adjusts border color */
+    color: white !important; /* Ensures text remains visible */
+}
+.btn-info:hover {
+    background-color: #0a58ca !important; /* Even darker on hover */
+    border-color: #094aad !important;
+}
     </style>
 
 </head>
@@ -218,7 +281,7 @@ include('include/navbar.php');
             <!-- Row for Add New Button (Aligned Right) -->
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-end">
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addEmployeeModal">
                         <i class="fas fa-user-plus"></i> Add New
                     </button>
                 </div>
@@ -235,6 +298,8 @@ include('include/navbar.php');
                         <button class="btn btn-primary searchBTN" onclick="searchEmployee()">
                             <i class="fas fa-search"></i> Search
                         </button>
+
+                        
                     </div>
                 </div>
             </div>
@@ -274,7 +339,7 @@ include('include/navbar.php');
                             </div>
                             
                             <!-- Card Footer with Buttons -->
-                            <div class="card-footer">
+                            <div class="card-footer " style="background-color:rgb(4, 92, 165) !important; /* Steel Blue */">
                                 <div class="row g-1">
                                 <button class="btn btn-info col viewEmployeeBtn" data-id="<?php echo $row['id']; ?>" data-bs-toggle="modal" data-bs-target="#viewEmployeeModal"><i class="fas fa-eye"></i></button>
                                 <button class="btn btn-warning col editEmployeeBtn" data-id="<?php echo $row['id']; ?>" data-bs-toggle="modal" data-bs-target="#editEmployeeModal"><i class="fas fa-pencil-alt"></i></button>
@@ -432,110 +497,43 @@ include('include/navbar.php');
     </div>
 
 
-    
-        <!-- View Employee Modal -->
-    <div class="modal fade" id="viewEmployeeModal" tabindex="-1" aria-labelledby="viewEmployeeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="viewEmployeeModalLabel">Employee Details</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+<!-- View Employee Modal -->
+<div class="modal fade" id="viewEmployeeModal" tabindex="-1" aria-labelledby="viewEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md modal-dialog-centered">
+        <div class="modal-content custom-id-card">
+            <div class="modal-body">
+                <div class="id-card-header">
+                    <h5 class="text-center">Employee ID: <span id="employeeId"></span></h5>
                 </div>
-                <div class="modal-body">
-                    <!-- Profile Picture -->
-                    <img src="emp_profile/default.png" class="employee-photo img-fluid rounded-circle mb-3" 
-                         style="width: 100px; height: 100px; object-fit: cover;">
-                    
-                    <p><strong>Name:</strong> <span id="employeeName"></span></p>
-                    <p><strong>Sex:</strong> <span id="employeeSex"></span></p>
-                    <p><strong>Date of Birth:</strong> <span id="employeeDOB"></span></p>
-                    <p><strong>Address:</strong> <span id="employeeAddress"></span></p>
-                    <p><strong>Religion:</strong> <span id="employeeReligion"></span></p>
-                    <p><strong>Position:</strong> <span id="employeePosition"></span></p>
-                    <p><strong>Department:</strong> <span id="employeeDepartment"></span></p>
-                    <p><strong>Civil Status:</strong> <span id="employeeCivilStatus"></span></p>
-                    <p><strong>Hired Date:</strong> <span id="employeeHiredDate"></span></p>
-                    <p><strong>Contact Number:</strong> <span id="employeeContact"></span></p>
-                    <p><strong>Email Addres:</strong> <span id="employeeEmail"></span></p>
-                    <p><strong>Status:</strong> <span id="employeeStatus"></span></p>
-
-                    <p><strong>Age:</strong> <span id="employeeAge"></span></p>
+                <div class="id-card-body">
+                    <div class="row">
+                        <!-- Employee Details on Left -->
+                        <div class="col-8">
+                            <p><strong>Name:</strong> <span id="employeeName"></span></p>
+                            <p><strong>Sex:</strong> <span id="employeeSex"></span></p>
+                            <p><strong>Date of Birth:</strong> <span id="employeeDOB"></span></p>
+                            <p><strong>Age:</strong> <span id="employeeAge"></span></p>
+                            <p><strong>Civil Status:</strong> <span id="employeeCivilStatus"></span></p>
+                            <p><strong>Address:</strong> <span id="employeeAddress"></span></p>
+                            <p><strong>Position:</strong> <span id="employeePosition"></span></p>
+                            <p><strong>Department:</strong> <span id="employeeDepartment"></span></p>
+                            <p><strong>Hired Date:</strong> <span id="employeeHiredDate"></span></p>
+                            <p><strong>Status:</strong> <span id="employeeStatus"></span></p>
+                        </div>
+                        <!-- Profile Photo on Right -->
+                        <div class="col-4 text-center">
+                            <img src="emp_profile/default.png" class="id-photo">
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <div class="id-card-footer">
+                    <p class="text-center"><strong>Contact:</strong> <span id="employeeContact"></span> | <strong>Email:</strong> <span id="employeeEmail"></span></p>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-
-
-    <!-- Edit Employee Modal  address, position, civStatus, conNum,status,photo -->
-    <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editEmployeeForm">
-                        <input type="hidden" id="editEmployeeId"> <!-- Hidden input for Employee ID -->
-                        <!-- Photo Upload -->
-                        <div class="col-sm-3 text-center">
-                            <img id="editProfilePreview" src="emp_profile/default.png" class="img-thumbnail" alt="Profile Picture">
-                            <input type="file" class="form-control" name="editEmployeePhoto" id="editEmployeePhoto" onchange="previewEditProfileIMG(event)">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="editEmployeeAddress" class="form-label">Address</label>
-                            <input type="text" class="form-control" name="editEmployeeAddress" id="editEmployeeAddress">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="editEmployeePosition" class="form-label">Position</label>
-                            <input type="text" class="form-control" name="editEmployeePosition" id="editEmployeePosition">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="editEmployeeCivilStatus" class="form-label">Civil Status</label>
-                            <select class="form-control" name="editEmployeeCivilStatus" id="editEmployeeCivilStatus">
-                                <option value="Single">Single</option>
-                                <option value="Married">Married</option>
-                                <option value="Divorced">Divorced</option>
-                                <option value="Widowed">Widowed</option>
-                            </select>
-                      </div>
-
-                        <div class="mb-3">
-                            <label for="editEmployeeContact" class="form-label">Contact Number</label>
-                            <input type="text" class="form-control" name="editEmployeeContact" id="editEmployeeContact">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="editEmployeeStatus" class="form-label">Employee Status</label>
-                            <select class="form-control" name="editEmployeeStatus" id="editEmployeeStatus">
-                                <option value="Working">Working</option>
-                                <option value="On Leave">On Leave</option>
-                                <option value="On Break">On Break</option>
-                                <option value="Available">Available</option>
-                            </select>
-                      </div>
-
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </form>
-              </div>
-            </div>
-        </div>
-    </div>
-
-
-
-
-        
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
@@ -546,16 +544,6 @@ include('include/navbar.php');
             }
             reader.readAsDataURL(event.target.files[0]);
         }
-
-
-        function previewEditProfileIMG(event) {
-            const reader = new FileReader();
-            reader.onload = function () {
-                document.getElementById('editProfilePreview').src = reader.result;
-            }
-            reader.readAsDataURL(event.target.files[0]);
-        }
-
 
         // Calculate age when birthdate changes
         document.getElementById("birthdate").addEventListener("change", function() {
@@ -633,7 +621,7 @@ include('include/navbar.php');
 
             // Make AJAX request to fetch employee details
             $.ajax({
-                url: "view_employee_modal.php",  // Backend PHP file
+                url: "view_modal.php",  // Backend PHP file
                 type: "POST",
                 data: { id: employeeId },
                 dataType: "json",
@@ -653,6 +641,7 @@ include('include/navbar.php');
                         $("#employeeEmail").text(response.email);
                         $("#employeeStatus").text(response.status);
                         $("#employeeAge").text(response.age);
+                        $("#employeeId").text(response.id);
                     } else {
                         alert("Failed to fetch employee details.");
                     }
@@ -664,41 +653,8 @@ include('include/navbar.php');
             });
         });
 
-
-
-        //edit employee
-        $(document).ready(function() {
-            $('#editEmployeeForm').submit(function(e) {
-                e.preventDefault(); // Prevent default form submission
-            
-                var formData = new FormData(this); // Collect form data
-                formData.append('id', $('#editEmployeeId').val()); // Add employee ID
-            
-                $.ajax({
-                    url: 'update_employee.php', // Path to your PHP script
-                    type: 'POST',
-                    data: formData,
-                    contentType: false,
-                    processData: false,
-                    dataType: 'json',
-                    success: function(response) {
-                        if (response.success) {
-                            alert('Employee updated successfully!');
-                            $('#editEmployeeModal').modal('hide'); // Close modal
-                            location.reload(); // Reload page to reflect changes
-                        } else {
-                            alert('Error: ' + response.message);
-                        }
-                    },
-                    error: function() {
-                        alert('An error occurred during the update.');
-                    }
-                });
-            });
-        });
-
-
         </script>
 </body>
 </html>
 <?php $conn->close(); ?>
+

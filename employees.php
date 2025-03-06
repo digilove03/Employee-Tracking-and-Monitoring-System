@@ -469,6 +469,74 @@ include('include/navbar.php');
     </div>
 
 
+
+    <!-- Edit Employee Modal  address, position, civStatus, conNum,status,photo -->
+    <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="editEmployeeForm">
+                        <input type="hidden" id="editEmployeeId"> <!-- Hidden input for Employee ID -->
+                        <!-- Photo Upload -->
+                        <div class="col-sm-3 text-center">
+                            <img id="editProfilePreview" src="emp_profile/default.png" class="img-thumbnail" alt="Profile Picture">
+                            <input type="file" class="form-control" name="editEmployeePhoto" id="editEmployeePhoto" onchange="previewEditProfileIMG(event)">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEmployeeAddress" class="form-label">Address</label>
+                            <input type="text" class="form-control" name="editEmployeeAddress" id="editEmployeeAddress">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEmployeePosition" class="form-label">Position</label>
+                            <input type="text" class="form-control" name="editEmployeePosition" id="editEmployeePosition">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEmployeeCivilStatus" class="form-label">Civil Status</label>
+                            <select class="form-control" name="editEmployeeCivilStatus" id="editEmployeeCivilStatus">
+                                <option value="Single">Single</option>
+                                <option value="Married">Married</option>
+                                <option value="Divorced">Divorced</option>
+                                <option value="Widowed">Widowed</option>
+                            </select>
+                      </div>
+
+                        <div class="mb-3">
+                            <label for="editEmployeeContact" class="form-label">Contact Number</label>
+                            <input type="text" class="form-control" name="editEmployeeContact" id="editEmployeeContact">
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="editEmployeeStatus" class="form-label">Employee Status</label>
+                            <select class="form-control" name="editEmployeeStatus" id="editEmployeeStatus">
+                                <option value="Working">Working</option>
+                                <option value="On Leave">On Leave</option>
+                                <option value="On Break">On Break</option>
+                                <option value="Available">Available</option>
+                            </select>
+                      </div>
+
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
+                        </div>
+                    </form>
+              </div>
+            </div>
+        </div>
+    </div>
+
+
+
+
+        
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function previewImage(event) {
@@ -478,6 +546,16 @@ include('include/navbar.php');
             }
             reader.readAsDataURL(event.target.files[0]);
         }
+
+
+        function previewEditProfileIMG(event) {
+            const reader = new FileReader();
+            reader.onload = function () {
+                document.getElementById('editProfilePreview').src = reader.result;
+            }
+            reader.readAsDataURL(event.target.files[0]);
+        }
+
 
         // Calculate age when birthdate changes
         document.getElementById("birthdate").addEventListener("change", function() {
@@ -585,6 +663,40 @@ include('include/navbar.php');
             });
             });
         });
+
+
+
+        //edit employee
+        $(document).ready(function() {
+            $('#editEmployeeForm').submit(function(e) {
+                e.preventDefault(); // Prevent default form submission
+            
+                var formData = new FormData(this); // Collect form data
+                formData.append('id', $('#editEmployeeId').val()); // Add employee ID
+            
+                $.ajax({
+                    url: 'update_employee.php', // Path to your PHP script
+                    type: 'POST',
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    dataType: 'json',
+                    success: function(response) {
+                        if (response.success) {
+                            alert('Employee updated successfully!');
+                            $('#editEmployeeModal').modal('hide'); // Close modal
+                            location.reload(); // Reload page to reflect changes
+                        } else {
+                            alert('Error: ' + response.message);
+                        }
+                    },
+                    error: function() {
+                        alert('An error occurred during the update.');
+                    }
+                });
+            });
+        });
+
 
         </script>
 </body>

@@ -750,7 +750,7 @@ include('include/navbar.php');
 
         //edit employee
         $(document).ready(function() {
-            $('#editEmployeebtn').submit(function(e) {
+            $('#editEmployeeForm').submit(function(e) {
                 e.preventDefault(); // Prevent default form submission
             
                 var formData = new FormData(this); // Collect form data

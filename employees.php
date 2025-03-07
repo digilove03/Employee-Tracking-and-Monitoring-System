@@ -123,7 +123,10 @@ include('include/navbar.php');
             border: 1px solid #ccc;
             display: block;
         }
-
+        .modal-header {
+            background-color: #007bff;
+            color: #fff;
+        }
         #profilePicture {
             width: 150px;
             margin-top: 5px;
@@ -268,6 +271,101 @@ include('include/navbar.php');
 .btn-info:hover {
     background-color: #0a58ca !important; /* Even darker on hover */
     border-color: #094aad !important;
+}
+
+.custom-modal {
+        max-width: 400px; /* Smaller width */
+    }
+
+    .custom-modal-content {
+        border-radius: 6px;
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+        padding: 10px;
+    }
+
+    /* Blue Header */
+    .custom-modal-header {
+        background-color: #007bff; /* Primary Blue */
+        border-bottom: none;
+        padding: 8px 12px;
+        color: white;
+    }
+
+    .custom-modal-header .btn-close {
+        filter: invert(1); /* Makes close button white */
+    }
+
+    /* Profile Picture Section */
+    .custom-photo-section {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 6px;
+    }
+
+    .custom-profile-preview {
+        width: 70px;
+        height: 70px;
+        object-fit: cover;
+        border-radius: 50%;
+        border: 1px solid #ddd;
+    }
+
+    .custom-file-input {
+        max-width: 180px;
+        font-size: 12px;
+        padding: 4px;
+    }
+
+    /* Form Inputs */
+    .custom-label {
+        font-weight: 500;
+        font-size: 12px;
+        color: #333;
+        margin-bottom: 2px;
+    }
+
+    .custom-input, .custom-select {
+        border-radius: 3px;
+        padding: 6px;
+        font-size: 12px;
+        border: 1px solid #ccc;
+    }
+
+    /* Modal Footer */
+    .custom-modal-footer {
+        padding: 8px;
+    }
+
+    /* Side-by-Side Buttons */
+    .custom-btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+    .custom-btn-primary:hover {
+        background-color: #0056b3;
+    }
+
+    .custom-btn-secondary {
+        background-color: #6c757d;
+        border: none;
+        padding: 6px 12px;
+        font-size: 12px;
+    }
+
+   
+    .save-btn:hover {
+    background-color:rgb(27, 125, 231); /* Darker Blue */
+    transform: scale(1.05); /* Slight scale-up effect */
+    color: #fff;
+}
+
+.save-btn:active {
+    background-color: #004494; /* Even darker blue when clicked */
+    transform: scale(0.98); /* Slight press-down effect */
 }
     </style>
 
@@ -536,68 +634,68 @@ include('include/navbar.php');
 
 
 
-    <!-- Edit Employee Modal  address, position, civStatus, conNum,status,photo -->
-    <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="editEmployeeForm">
-                        <input type="hidden" id="editEmployeeId"> <!-- Hidden input for Employee ID -->
-                        <!-- Photo Upload -->
-                        <div class="col-sm-3 text-center">
-                            <img id="editProfilePreview" src="emp_profile/default.png" class="img-thumbnail" alt="Profile Picture">
-                            <input type="file" class="form-control" name="editEmployeePhoto" id="editEmployeePhoto" onchange="previewEditProfileIMG(event)">
-                        </div>
+<!-- Edit Employee Modal -->
+<div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm custom-modal">
+        <div class="modal-content custom-modal-content">
+            <div class="modal-header custom-modal-header">
+                <h5 class="modal-title text-white" id="editEmployeeModalLabel">Edit Employee</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="editEmployeeForm">
+                    <input type="hidden" id="editEmployeeId"> <!-- Hidden input for Employee ID -->
 
-                        <div class="mb-3">
-                            <label for="editEmployeeAddress" class="form-label">Address</label>
-                            <input type="text" class="form-control" name="editEmployeeAddress" id="editEmployeeAddress">
-                        </div>
+                    <!-- Photo Upload -->
+                    <div class="text-center custom-photo-section">
+                        <img id="editProfilePreview" src="emp_profile/default.png" class="custom-profile-preview" alt="Profile Picture">
+                        <input type="file" class="form-control custom-file-input mt-1" id="editEmployeePhoto" onchange="previewEditProfileIMG(event)">
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="editEmployeePosition" class="form-label">Position</label>
-                            <input type="text" class="form-control" name="editEmployeePosition" id="editEmployeePosition">
-                        </div>
+                    <div class="mb-1">
+                        <label for="editEmployeeAddress" class="custom-label">Address</label>
+                        <input type="text" class="form-control custom-input" id="editEmployeeAddress">
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="editEmployeeCivilStatus" class="form-label">Civil Status</label>
-                            <select class="form-control" name="editEmployeeCivilStatus" id="editEmployeeCivilStatus">
-                                <option value="Single">Single</option>
-                                <option value="Married">Married</option>
-                                <option value="Divorced">Divorced</option>
-                                <option value="Widowed">Widowed</option>
-                            </select>
-                      </div>
+                    <div class="mb-1">
+                        <label for="editEmployeePosition" class="custom-label">Position</label>
+                        <input type="text" class="form-control custom-input" id="editEmployeePosition">
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="editEmployeeContact" class="form-label">Contact Number</label>
-                            <input type="text" class="form-control" name="editEmployeeContact" id="editEmployeeContact">
-                        </div>
+                    <div class="mb-1">
+                        <label for="editEmployeeCivilStatus" class="custom-label">Civil Status</label>
+                        <select class="form-select custom-select" id="editEmployeeCivilStatus">
+                            <option value="Single">Single</option>
+                            <option value="Married">Married</option>
+                            <option value="Divorced">Divorced</option>
+                            <option value="Widowed">Widowed</option>
+                        </select>
+                    </div>
 
-                        <div class="mb-3">
-                            <label for="editEmployeeStatus" class="form-label">Employee Status</label>
-                            <select class="form-control" name="editEmployeeStatus" id="editEmployeeStatus">
-                                <option value="Working">Working</option>
-                                <option value="On Leave">On Leave</option>
-                                <option value="On Break">On Break</option>
-                                <option value="Available">Available</option>
-                            </select>
-                      </div>
+                    <div class="mb-1">
+                        <label for="editEmployeeContact" class="custom-label">Contact Number</label>
+                        <input type="text" class="form-control custom-input" id="editEmployeeContact">
+                    </div>
 
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                            <button type="submit" class="btn btn-primary">Save Changes</button>
-                        </div>
-                    </form>
-              </div>
+                    <div class="mb-1">
+                        <label for="editEmployeeStatus" class="custom-label">Employee Status</label>
+                        <select class="form-select custom-select" id="editEmployeeStatus">
+                            <option value="Working">Working</option>
+                            <option value="On Leave">On Leave</option>
+                            <option value="On Break">On Break</option>
+                            <option value="Available">Available</option>
+                        </select>
+                    </div>
+
+                    <div class="modal-footer custom-modal-footer d-flex justify-content-end gap-1">
+                        <button type="button" class="btn custom-btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn custom-btn-primary">Save</button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
-
+</div>
 
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -784,4 +882,5 @@ include('include/navbar.php');
 </body>
 </html>
 <?php $conn->close(); ?>
+
 

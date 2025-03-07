@@ -137,17 +137,32 @@ $tasks = fetchTasks($conn);
             padding-top: 5px;
             font-style: italic;
         }
-
+      
 
         #assignTaskModal .modal-dialog {
-            max-width: 60%;
-        }
+    max-width: 40%; /* Reduce the width */
+}
 
-        #assignTaskModal .modal-body {
-            align-items: center;
-            max-height: 70vh;
-            overflow-y: auto;
-        }
+#assignTaskModal .modal-body {
+    padding: 10px; /* Reduce padding */
+    max-height: 60vh; /* Reduce height if necessary */
+    overflow-y: auto;
+}
+
+#assignTaskModal .modal-header, 
+#assignTaskModal .modal-footer {
+    padding: 8px; /* Reduce space on top and bottom */
+}
+
+#assignTaskModal label {
+    font-size: 12px; /* Make labels slightly smaller */
+}
+
+#assignTaskModal .form-select,
+#assignTaskModal .form-control {
+    font-size: 14px; /* Keep input readability but slightly smaller */
+    padding: 6px; /* Reduce padding */
+}
 
         @media (max-width: 576px) {
             .col-sm-6, .col-sm-4, .col-sm-3 {
@@ -196,6 +211,42 @@ $tasks = fetchTasks($conn);
             font-weight: bold;
             color: red;
         }
+        .modal-header {
+          background-color: #007bff;
+          color: #fff;
+        }
+
+        .task-modal .modal-content {
+    border-radius: 10px;
+    padding: 15px;
+}
+
+.task-label {
+    font-weight: bold;
+    color: #333;
+}
+
+.task-text {
+    font-size: 1rem;
+    color: #555;
+    padding: 5px 10px;
+    background-color: #f8f9fa;
+    border-radius: 5px;
+}
+
+.task-detail {
+    margin-bottom: 12px;
+}
+
+.task-select {
+    border-radius: 5px;
+    padding: 8px;
+}
+
+.task-textarea {
+    min-height: 80px;
+    border-radius: 5px;
+}
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -207,8 +258,8 @@ $tasks = fetchTasks($conn);
             <!-- Row for Add New Button (Aligned Right) -->
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-end">
-                    <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
-                        <i class="fas fa-user-plus"></i> Assign New Task
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
+                    <i class="fas fa-tasks"></i> Assign New Task
                     </button>
                 </div>
             </div>
@@ -256,7 +307,7 @@ $tasks = fetchTasks($conn);
   </main>
 
   <!-- Assign Task Modal -->
-  <div class="modal fade" id="assignTaskModal" tabindex="-1" aria-labelledby="assignTaskModalLabel" aria-hidden="true">
+<div class="modal fade" id="assignTaskModal" tabindex="-1" aria-labelledby="assignTaskModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -269,12 +320,13 @@ $tasks = fetchTasks($conn);
                     <!-- Error message container -->
                     <div id="errorMessage" style="color: red; font-style: italic; margin-bottom: 10px;"></div>
 
+                    <!-- Employee Selection -->
                     <div class="col-md-12">
                         <label for="employeeName" class="form-label">Employee Name</label>
                         <select id="employeeName" name="employee_id" class="form-select" required>
                             <option value="">Select Employee</option>
                             <?php
-                            include('db_connect.php'); // Ensure database connection is included
+                            include('db_connect.php');
                             $query = "SELECT id, last_name, first_name FROM employee WHERE status = 'Available' ORDER BY last_name ASC";
                             $employeeResult = mysqli_query($conn, $query);
 
@@ -289,43 +341,50 @@ $tasks = fetchTasks($conn);
                         </select>
                     </div>
 
-                    <!-- Service Selection -->
+                    <!-- Service Selection (Aligned with Add Button) -->
                     <div class="col-md-12 mt-3">
                         <label for="serviceSelect" class="form-label">Service</label>
-                        <select id="serviceSelect" class="form-select">
-                            <option value="">Select Service</option>
-                            <option value="Diagnostic">Diagnostic</option>
-                            <option value="Computer Format">Computer Format</option>
-                            <option value="Data Recovery">Data Recovery</option>
-                            <option value="Virus/Malware Removal">Virus/Malware Removal</option>
-                            <option value="Computer Repair">Computer Repair</option>
-                            <option value="Change Hardware">Change Hardware</option>
-                            <option value="Computer Upgrade">Computer Upgrade</option>
-                            <option value="Printer Repair">Printer Repair</option>
-                            <option value="Printer Setup">Printer Setup</option>
-                            <option value="Printer Reset">Printer Reset</option>
-                            <option value="Router Setup">Router Setup</option>
-                            <option value="Router Reset">Router Reset</option>
-                            <option value="Others">Others</option>
-                        </select>
+                        <div class="d-flex">
+                            <select id="serviceSelect" class="form-select me-2" style="width: 70%;">
+                                <option value="">Select Service</option>
+                                <option value="Diagnostic">Diagnostic</option>
+                                <option value="Computer Format">Computer Format</option>
+                                <option value="Data Recovery">Data Recovery</option>
+                                <option value="Virus/Malware Removal">Virus/Malware Removal</option>
+                                <option value="Computer Repair">Computer Repair</option>
+                                <option value="Change Hardware">Change Hardware</option>
+                                <option value="Computer Upgrade">Computer Upgrade</option>
+                                <option value="Printer Repair">Printer Repair</option>
+                                <option value="Printer Setup">Printer Setup</option>
+                                <option value="Printer Reset">Printer Reset</option>
+                                <option value="Router Setup">Router Setup</option>
+                                <option value="Router Reset">Router Reset</option>
+                                <option value="Others">Others</option>
+                            </select>
+                            <button type="button" id="addServiceBtn" class="btn btn-secondary" style="background-color: rgb(22, 125, 235); color: white; width: 150px;">Add Service</button>
+                        </div>
 
+                        <!-- Custom input for 'Others' -->
                         <input type="text" id="otherService" class="form-control mt-2 d-none" placeholder="Please specify other service">
-                        <button type="button" id="addServiceBtn" class="btn btn-secondary mt-2">Add Service</button>
+
                         <div id="selectedServices" class="mt-2"></div>
                     </div>
 
                     <input type="hidden" id="selectedServicesInput" name="service">
 
+                    <!-- Location Input -->
                     <div class="col-md-12 mt-3">
                         <label for="location" class="form-label">Req. Office/ Dept.</label>
                         <input type="text" id="location" name="location" class="form-control" required>
                     </div>
 
+                    <!-- Estimated Time -->
                     <div class="col-md-12 mt-3">
                         <label for="estimatedTime" class="form-label">Estimated Time</label>
                         <input type="datetime-local" id="estimatedTime" name="deadline" class="form-control" required>
                     </div>
 
+                    <!-- Role Selection -->
                     <div class="col-md-12 mt-3">
                         <label for="role" class="form-label">Role</label>
                         <select id="role" name="role" class="form-select" required>
@@ -350,11 +409,11 @@ $tasks = fetchTasks($conn);
 
 
   <!-- View Task Modal -->
-  <div class="modal fade" id="viewTaskModal" tabindex="-1" aria-labelledby="viewTaskModalLabel" aria-hidden="true">
+<div class="modal fade task-modal" id="viewTaskModal" tabindex="-1" aria-labelledby="viewTaskModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewTaskModalLabel">View Task Details</h5>
+                <h5 class="modal-title" id="viewTaskModalLabel"><i class="fas fa-clipboard-list"></i> View Task Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -363,41 +422,41 @@ $tasks = fetchTasks($conn);
                     <input type="hidden" id="record_number" name="record_number">
 
                     <!-- Error message container -->
-                    <div id="errorMessage" style="color: red; font-style: italic; margin-bottom: 10px;"></div>
+                    <div id="errorMessage" class="text-danger mb-2"></div>
 
-                    <div class="col-md-12">
-                        <label class="form-label">Record Number</label>
-                        <p><strong id="taskRecordNumber"></strong></p>
+                    <div class="task-detail">
+                        <label class="task-label">Record Number</label>
+                        <p class="task-text" id="taskRecordNumber"></p>
                     </div>
 
-                    <div class="col-md-12">
-                        <label class="form-label">Employee Name</label>
-                        <p><strong id="taskEmployeeName"></strong></p>
+                    <div class="task-detail">
+                        <label class="task-label">Employee Name</label>
+                        <p class="task-text" id="taskEmployeeName"></p>
                     </div>
 
-                    <div class="col-md-12">
-                        <label class="form-label">Service</label>
-                        <p><strong id="taskService"></strong></p>
+                    <div class="task-detail">
+                        <label class="task-label">Service</label>
+                        <p class="task-text" id="taskService"></p>
                     </div>
 
-                    <div class="col-md-12">
-                        <label class="form-label">Req. Office/Dept.</label>
-                        <p><strong id="taskLocation"></strong></p>
+                    <div class="task-detail">
+                        <label class="task-label">Req. Office/Dept.</label>
+                        <p class="task-text" id="taskLocation"></p>
                     </div>
 
-                    <div class="col-md-12">
-                        <label class="form-label">Estimated Time</label>
-                        <p><strong id="taskCompletionTime"></strong></p>
+                    <div class="task-detail">
+                        <label class="task-label">Estimated Time</label>
+                        <p class="task-text" id="taskCompletionTime"></p>
                     </div>
 
-                    <div class="col-md-12">
-                        <label class="form-label">Role</label>
-                        <p><strong id="taskRole"></strong></p>
+                    <div class="task-detail">
+                        <label class="task-label">Role</label>
+                        <p class="task-text" id="taskRole"></p>
                     </div>
-
-                    <div class="col-md-12">
-                        <label class="form-label">Status</label>
-                        <select id="service_status" name="service_status" class="form-select">
+                    <hr style="width: 100%; height: 2px; background-color: black; border: none;">
+                    <div class="task-detail">
+                        <label class="task-label">Status</label>
+                        <select id="service_status" name="service_status" class="form-select task-select">
                             <option value="Ongoing">Ongoing</option>
                             <option value="Completed">Completed</option>
                             <option value="Cancelled">Cancelled</option>
@@ -405,19 +464,18 @@ $tasks = fetchTasks($conn);
                     </div>
 
                     <div class="mb-3">
-                        <label class="form-label">Remarks</label>
-                        <textarea id="remarks" name="remarks" class="form-control" autocomplete="off">No Remarks.</textarea>
+                        <label class="task-label">Remarks</label>
+                        <textarea id="remarks" name="remarks" class="form-control task-textarea" autocomplete="off">No Remarks.</textarea>
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                        <button type="submit" id="saveTaskChanges" class="btn btn-primary">Save Changes</button>
+                    <button type="submit" id="saveTaskChanges" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-
 
 <script>
     flatpickr("#estimatedTime", {
@@ -584,6 +642,11 @@ $tasks = fetchTasks($conn);
             }
         });
     });
+});
+
+</script>
+</body>
+</html>
 });
 
 </script>

@@ -64,189 +64,199 @@ $tasks = fetchTasks($conn);
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
   <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
   <style>
-        .dropdown-item:hover {
-            cursor: pointer;
-        }
+    .dropdown-item:hover {
+        cursor: pointer;
+    }
 
-        .form-container {
-            width: 200px;
-            border: 2px solid #ccc;
-            padding: 15px;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+    .form-container {
+        width: 200px;
+        border: 2px solid #ccc;
+        padding: 15px;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-        .input-container {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-            width: 100%;
-        }
+    .input-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+        width: 100%;
+    }
 
-        .input-container input {
-            width: 100%;
-            padding: 8px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
+    .input-container input {
+        width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+    }
 
-        .full-width {
-            grid-column: span 2;
-        }
-
-
-        .buttons {
-            display: flex;
-            justify-content: space-between;
-            width: 100%;
-            margin-top: 10px;
-        }
-
-        .buttons button {
-            padding: 8px 12px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
+    .full-width {
+        grid-column: span 2;
+    }
 
 
-        .close-btn {
-            background-color: gray;
-            color: white;
-        }
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+        margin-top: 10px;
+    }
 
-        .save-btn {
-            background-color: blue;
-            color: white;
-        }
+    .buttons button {
+        padding: 8px 12px;
+        border: none;
+        cursor: pointer;
+        border-radius: 5px;
+    }
 
-        /* Form Controls */
-        .form-control {
-            border-radius: 5px;
-        }
 
-        .modal-footer button {
-            min-width: 100px;
-        }
+    .close-btn {
+        background-color: gray;
+        color: white;
+    }
 
-        label {
-            font-size: 13px;
-            margin-bottom: 0;
-            padding-top: 5px;
-            font-style: italic;
-        }
+    .save-btn {
+        background-color: blue;
+        color: white;
+    }
+
+    /* Form Controls */
+    .form-control {
+        border-radius: 5px;
+    }
+
+    .modal-footer button {
+        min-width: 100px;
+    }
+
+    label {
+        font-size: 13px;
+        margin-bottom: 0;
+        padding-top: 5px;
+        font-style: italic;
+    }
       
+    #assignTaskModal .modal-dialog {
+        max-width: 40%; /* Reduce the width */
+    }
 
-        #assignTaskModal .modal-dialog {
-    max-width: 40%; /* Reduce the width */
-}
+    #assignTaskModal .modal-body {
+        padding: 10px; /* Reduce padding */
+        max-height: 60vh; /* Reduce height if necessary */
+        overflow-y: auto;
+    }
 
-#assignTaskModal .modal-body {
-    padding: 10px; /* Reduce padding */
-    max-height: 60vh; /* Reduce height if necessary */
-    overflow-y: auto;
-}
+    #assignTaskModal .modal-header, 
+    #assignTaskModal .modal-footer {
+        padding: 8px; /* Reduce space on top and bottom */
+    }
 
-#assignTaskModal .modal-header, 
-#assignTaskModal .modal-footer {
-    padding: 8px; /* Reduce space on top and bottom */
-}
+    #assignTaskModal label {
+        font-size: 12px; /* Make labels slightly smaller */
+    }
 
-#assignTaskModal label {
-    font-size: 12px; /* Make labels slightly smaller */
-}
+    #assignTaskModal .form-select,
+    #assignTaskModal .form-control {
+        font-size: 14px; /* Keep input readability but slightly smaller */
+        padding: 6px; /* Reduce padding */
+    }
 
-#assignTaskModal .form-select,
-#assignTaskModal .form-control {
-    font-size: 14px; /* Keep input readability but slightly smaller */
-    padding: 6px; /* Reduce padding */
-}
-
-        @media (max-width: 576px) {
-            .col-sm-6, .col-sm-4, .col-sm-3 {
-                width: 100%;
-            }
+    @media (max-width: 576px) {
+        .col-sm-6, .col-sm-4, .col-sm-3 {
+            width: 100%;
         }
+    }
 
-        .card-body {
-            display: flex;
-            align-items: center; 
-            gap: 15px; 
-            font-size: 14px;
-        }
+    .card-body {
+        display: flex;
+        align-items: center; 
+        gap: 15px; 
+        font-size: 14px;
+    }
 
-        .card-body i {
-            font-size: 50px; 
-            color: #fff; 
-            flex-shrink: 0; 
-        }
+    .card-body i {
+        font-size: 50px; 
+        color: #fff; 
+        flex-shrink: 0; 
+    }
 
-        .card-body .placeholder {
-            color: #ccc; 
-            font-style: italic;
-        }
+    .card-body .placeholder {
+        color: #ccc; 
+        font-style: italic;
+    }
 
-        .info-text p {
-            margin: 3px 0; 
-            font-size: 14px; 
-        }
+    .info-text p {
+        margin: 3px 0; 
+        font-size: 14px; 
+    }
 
-        .service-tag {
-            display: inline-block;
-            background-color: #f0f0f0; /* Light gray */
-            border-radius: 20px; /* Makes it oval */
-            padding: 5px 15px;
-            margin: 5px;
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-            border: 1px solid #ccc;
-        }
+    .service-tag {
+        display: inline-block;
+        background-color: #f0f0f0; /* Light gray */
+        border-radius: 20px; /* Makes it oval */
+        padding: 5px 15px;
+        margin: 5px;
+        font-size: 14px;
+        font-weight: bold;
+        color: #333;
+        border: 1px solid #ccc;
+    }
 
-        .service-tag .remove-tag {
-            margin-left: 8px;
-            cursor: pointer;
-            font-weight: bold;
-            color: red;
-        }
-        .modal-header {
-          background-color: #007bff;
-          color: #fff;
-        }
+    .service-tag .remove-tag {
+        margin-left: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        color: red;
+    }
 
-        .task-modal .modal-content {
-    border-radius: 10px;
-    padding: 15px;
-}
+    .modal-header {
+      background-color: #007bff;
+      color: #fff;
+    }
 
-.task-label {
-    font-weight: bold;
-    color: #333;
-}
+    .task-modal .modal-content {
+        border-radius: 10px;
+        padding: 15px;
+    }
 
-.task-text {
-    font-size: 1rem;
-    color: #555;
-    padding: 5px 10px;
-    background-color: #f8f9fa;
-    border-radius: 5px;
-}
+    .task-label {
+        font-weight: bold;
+        color: #333;
+    }
 
-.task-detail {
-    margin-bottom: 12px;
-}
+    .task-text {
+        font-size: 1rem;
+        color: #555;
+        padding: 5px 10px;
+        background-color: #f8f9fa;
+        border-radius: 5px;
+    }
 
-.task-select {
-    border-radius: 5px;
-    padding: 8px;
-}
+    .task-detail {
+        margin-bottom: 12px;
+    }
 
-.task-textarea {
-    min-height: 80px;
-    border-radius: 5px;
-}
+    .task-select {
+        border-radius: 5px;
+        padding: 8px;
+    }
+
+    .task-textarea {
+        min-height: 80px;
+        border-radius: 5px;
+    }
+
+    #printTaskDetails {
+        background-color: rgb(5, 72, 175);
+        color: white;
+        transition: background-color 0.3s ease;
+    }
+
+    #printTaskDetails:hover {
+        background-color: #007bff;
+    }
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -446,13 +456,24 @@ $tasks = fetchTasks($conn);
 
                     <div class="task-detail">
                         <label class="task-label">Estimated Time</label>
-                        <p class="task-text" id="taskCompletionTime"></p>
+                        <p class="task-text" id="taskDeadline"></p>
                     </div>
 
                     <div class="task-detail">
                         <label class="task-label">Role</label>
                         <p class="task-text" id="taskRole"></p>
                     </div>
+
+                    <div class="task-detail">
+                        <label class="task-label">Time Started</label>
+                        <p class="task-text" id="taskTimeStarted"></p>
+                    </div>
+
+                    <div class="task-detail">
+                        <label class="task-label">Time Ended</label>
+                        <p class="task-text" id="taskTimeEnded"></p>
+                    </div>
+
                     <hr style="width: 100%; height: 2px; background-color: black; border: none;">
                     <div class="task-detail">
                         <label class="task-label">Status</label>
@@ -470,7 +491,8 @@ $tasks = fetchTasks($conn);
                 </div>
 
                 <div class="modal-footer">
-                    <button type="submit" id="saveTaskChanges" class="btn btn-primary">Save Changes</button>
+                <button type="button" id="printTaskDetails" class="btn btn-secondary">Print</button>
+                <button type="submit" id="saveTaskChanges" class="btn btn-primary">Save Changes</button>
                 </div>
             </form>
         </div>
@@ -584,8 +606,11 @@ $tasks = fetchTasks($conn);
                         $("#taskEmployeeName").text(response.data.employee_name);
                         $("#taskService").text(response.data.service);
                         $("#taskLocation").text(response.data.location);
-                        $("#taskCompletionTime").text(response.data.completion_time);
+                        $("#taskDeadline").text(response.data.deadline);
                         $("#taskRole").text(response.data.role);
+                        $("#taskTimeStarted").text(response.data.time_started);
+                        $("#taskTimeEnded").text(response.data.time_ended);
+                        $("#taskCompletionTime").text(response.completion_time);
                         $("#service_status").val(response.data.service_status);
                         $("#remarks").val(response.data.remarks ? response.data.remarks : "No Remarks.");
 
@@ -643,10 +668,31 @@ $tasks = fetchTasks($conn);
         });
     });
 });
+document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("printTaskDetails").addEventListener("click", function () {
+        let printContent = document.querySelector("#viewTaskModal .modal-body").innerHTML;
+        let originalContent = document.body.innerHTML;
 
-</script>
-</body>
-</html>
+        document.body.innerHTML = `
+            <html>
+            <head>
+                <title>Task Details</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; }
+                    .task-label { font-weight: bold; }
+                    .task-text { margin-bottom: 10px; }
+                </style>
+            </head>
+            <body>
+                ${printContent}
+            </body>
+            </html>
+        `;
+
+        window.print();
+        document.body.innerHTML = originalContent;
+        location.reload(); // Reload the page to restore the modal
+    });
 });
 
 </script>

@@ -45,6 +45,7 @@ $result_employees = mysqli_query($conn, $sql_employees);
         .dataTables_wrapper { font-size: 12px; }
         .charts-container canvas { max-height: 180px; }
         .container-fluid { margin-top: 20px; }
+        
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -74,7 +75,7 @@ $result_employees = mysqli_query($conn, $sql_employees);
                     <div class="dashboard-container">
                         <div class="table-container">
                             <div class="card">
-                                <h5>Employee Status Table</h5>
+                                <h5>EMPLOYEE STATUS</h5>
                                 <table id="employeeTable" class="display">
                                     <thead>
                                         <tr><th>Name</th><th>Status</th><th>Position</th></tr>
@@ -94,7 +95,7 @@ $result_employees = mysqli_query($conn, $sql_employees);
                         </div>
                         <div class="charts-container">
                             <div class="card">
-                                <h5>Employee Status Chart</h5>
+                                <h5>SERVICE STATUS</h5>
                                 <canvas id="myBarChart"></canvas>
                             </div>
                             <br>

@@ -367,6 +367,33 @@ include('include/navbar.php');
     background-color: #004494; /* Even darker blue when clicked */
     transform: scale(0.98); /* Slight press-down effect */
 }
+
+/* Make the modal wider */
+#editEmployeeModal .modal-dialog {
+    max-width: 800px; /* Adjust width as needed */
+}
+
+/* Change the modal header background to #007bff */
+#editEmployeeModal .modal-header {
+    background-color: #007bff !important;
+    color: white;
+}
+
+/* Change form focus color */
+#editEmployeeModal .form-control:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+}
+
+/* Update Save Button */
+.save-btn {
+    background-color: #007bff !important;
+}
+
+.save-btn:hover {
+    background-color: #0056b3 !important;
+}
+
     </style>
 
 </head>
@@ -634,65 +661,126 @@ include('include/navbar.php');
 
 
 
-<!-- Edit Employee Modal -->
 <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-sm custom-modal">
-        <div class="modal-content custom-modal-content">
-            <div class="modal-header custom-modal-header">
-                <h5 class="modal-title text-white" id="editEmployeeModalLabel">Edit Employee</h5>
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editEmployeeModalLabel">Edit Employee</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <form id="editEmployeeForm">
-                    <input type="hidden" id="editEmployeeId"> <!-- Hidden input for Employee ID -->
+            
+            <form id="editEmployeeForm" action="update_employee.php" method="POST" enctype="multipart/form-data">
+                <div class="modal-body">
+                    <!-- Error message container -->
+                    <div id="editErrorMessage" style="color: red; font-style: italic; margin-bottom: 10px;"></div>
 
-                    <!-- Photo Upload -->
-                    <div class="text-center custom-photo-section">
-                        <img id="editProfilePreview" src="emp_profile/default.png" class="custom-profile-preview" alt="Profile Picture">
-                        <input type="file" class="form-control custom-file-input mt-1" id="editEmployeePhoto" onchange="previewEditProfileIMG(event)">
+                    <div class="row">
+                        <!-- Photo Upload -->
+                        <div class="col-sm-3 text-center">
+                            <img id="editProfilePreview" src="emp_profile/default.png" class="img-thumbnail" alt="Profile Picture">
+                            <input type="file" class="form-control" name="editEmployeePhoto" id="editEmployeePhoto" onchange="previewEditImage(event)">
+                        </div>
+                        <!-- Personal Information -->
+                        <div class="col-sm-8">
+                            <input type="hidden" id="editEmployeeId" name="employeeId"> <!-- Hidden ID field for updating -->
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="editFirstName">First Name</label>
+                                    <input type="text" class="form-control" id="editFirstName" name="firstName" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="editLastName">Last Name</label>
+                                    <input type="text" class="form-control" id="editLastName" name="lastName" required>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="editMiddleName">Middle Name</label>
+                                    <input type="text" class="form-control" id="editMiddleName" name="middleName" required>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="editSuffix">Suffix</label>
+                                    <input type="text" class="form-control" id="editSuffix" name="suffix">
+                                </div>
+                            </div>
+                            
+                            <label for="editAddress">Address</label>
+                            <input type="text" class="form-control" id="editAddress" name="address" required>
+                            <div class="row">
+                                <div class="col-sm-4">
+                                    <label for="editBirthdate">Birthdate</label>
+                                    <input type="date" class="form-control" id="editBirthdate" name="birthdate" required>
+                                </div>
+                                <div class="col-sm-2">
+                                    <label for="editAge">Age</label>
+                                    <input type="number" class="form-control" id="editAge" readonly style="color: black; background-color: lightgray;">
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="editSex">Sex</label>
+                                    <select class="form-control" id="editSex" name="sex" required>
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="Male">Male</option>
+                                        <option value="Female">Female</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-3">
+                                    <label for="editCivilStatus">Civil Status</label>
+                                    <select class="form-control" id="editCivilStatus" name="civilStatus" required>
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="Single">Single</option>
+                                        <option value="Married">Married</option>
+                                        <option value="Divorced">Divorced</option>
+                                        <option value="Widowed">Widowed</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="mb-1">
-                        <label for="editEmployeeAddress" class="custom-label">Address</label>
-                        <input type="text" class="form-control custom-input" id="editEmployeeAddress">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="editReligion">Religion</label>
+                            <select class="form-control" id="editReligion" name="religion" required>
+                                <option value="" disabled selected>Select</option>
+                                <option value="Christianity">Christianity</option>
+                                <option value="Islam">Islam</option>
+                                <option value="Hinduism">Hinduism</option>
+                                <option value="Buddhism">Buddhism</option>
+                                <option value="Judaism">Judaism</option>
+                                <option value="Sikhism">Sikhism</option>
+                                <option value="Atheism">Atheism</option>
+                                <option value="Agnosticism">Agnosticism</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="editEmail">Email</label>
+                            <input type="email" class="form-control" id="editEmail" name="email" required>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="editContactNumber">Contact Number</label>
+                            <input type="text" class="form-control" id="editContactNumber" name="contactNumber" required>
+                        </div>
                     </div>
 
-                    <div class="mb-1">
-                        <label for="editEmployeePosition" class="custom-label">Position</label>
-                        <input type="text" class="form-control custom-input" id="editEmployeePosition">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label for="editDepartment">Department</label>
+                            <input type="text" class="form-control" id="editDepartment" name="department" readonly style="color: black; background-color: lightgray;">
+                        </div>
+                        <div class="col-sm-4">
+                            <label for="editPosition">Position</label>
+                            <input type="text" class="form-control" id="editPosition" name="position" required>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="editHiredDate">Hired Date</label>
+                            <input type="date" class="form-control" id="editHiredDate" name="hiredDate" required>
+                        </div>
                     </div>
-
-                    <div class="mb-1">
-                        <label for="editEmployeeCivilStatus" class="custom-label">Civil Status</label>
-                        <select class="form-select custom-select" id="editEmployeeCivilStatus">
-                            <option value="Single">Single</option>
-                            <option value="Married">Married</option>
-                            <option value="Divorced">Divorced</option>
-                            <option value="Widowed">Widowed</option>
-                        </select>
-                    </div>
-
-                    <div class="mb-1">
-                        <label for="editEmployeeContact" class="custom-label">Contact Number</label>
-                        <input type="text" class="form-control custom-input" id="editEmployeeContact">
-                    </div>
-
-                    <div class="mb-1">
-                        <label for="editEmployeeStatus" class="custom-label">Employee Status</label>
-                        <select class="form-select custom-select" id="editEmployeeStatus">
-                            <option value="Working">Working</option>
-                            <option value="On Leave">On Leave</option>
-                            <option value="On Break">On Break</option>
-                            <option value="Available">Available</option>
-                        </select>
-                    </div>
-
-                    <div class="modal-footer custom-modal-footer d-flex justify-content-end gap-1">
-                        <button type="button" class="btn custom-btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn custom-btn-primary">Save</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn close-btn" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn save-btn">Update</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

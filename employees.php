@@ -660,7 +660,7 @@ include('include/navbar.php');
 </div>
 
 
-
+<!--Edit modal-->
 <div class="modal fade" id="editEmployeeModal" tabindex="-1" aria-labelledby="editEmployeeModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -677,58 +677,68 @@ include('include/navbar.php');
                     <div class="row">
                         <!-- Photo Upload -->
                         <div class="col-sm-3 text-center">
-                            <img id="editProfilePreview" src="emp_profile/default.png" class="img-thumbnail" alt="Profile Picture">
-                            <input type="file" class="form-control" name="editEmployeePhoto" id="editEmployeePhoto" onchange="previewEditImage(event)">
+                            <img id="editProfilePreview" src="<?php echo $photoPath; ?>" class="img-thumbnail" alt="Profile Picture">
+                            <input type="file" class="form-control" name="editEmployeePhoto" id="editEmployeePhoto" onchange="previewEditProfileIMG(event)">
                         </div>
                         <!-- Personal Information -->
                         <div class="col-sm-8">
-                            <input type="hidden" id="editEmployeeId" name="employeeId"> <!-- Hidden ID field for updating -->
+                            <input type="hidden" id="editEmployeeId" name="id"> <!-- Hidden ID field for updating -->
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label for="editFirstName">First Name</label>
-                                    <input type="text" class="form-control" id="editFirstName" name="firstName" required>
+                                    <input type="text" class="form-control" id="editFirstName" name="firstName" readonly style="color: black; background-color: lightgray;">
                                 </div>
                                 <div class="col-sm-3">
                                     <label for="editLastName">Last Name</label>
-                                    <input type="text" class="form-control" id="editLastName" name="lastName" required>
+                                    <input type="text" class="form-control" id="editLastName" name="lastName" readonly style="color: black; background-color: lightgray;">
                                 </div>
                                 <div class="col-sm-3">
                                     <label for="editMiddleName">Middle Name</label>
-                                    <input type="text" class="form-control" id="editMiddleName" name="middleName" required>
+                                    <input type="text" class="form-control" id="editMiddleName" name="middleName" readonly style="color: black; background-color: lightgray;">
                                 </div>
                                 <div class="col-sm-2">
                                     <label for="editSuffix">Suffix</label>
-                                    <input type="text" class="form-control" id="editSuffix" name="suffix">
+                                    <input type="text" class="form-control" id="editSuffix" name="suffix" readonly style="color: black; background-color: lightgray;">
                                 </div>
                             </div>
                             
                             <label for="editAddress">Address</label>
-                            <input type="text" class="form-control" id="editAddress" name="address" required>
+                            <input type="text" class="form-control" id="editAddress" name="editAddress">
                             <div class="row">
                                 <div class="col-sm-4">
                                     <label for="editBirthdate">Birthdate</label>
-                                    <input type="date" class="form-control" id="editBirthdate" name="birthdate" required>
+                                    <input type="date" class="form-control" id="editBirthdate" name="editBirthdate" readonly style="color: black; background-color: lightgray;">
                                 </div>
-                                <div class="col-sm-2">
+                                <div class="col-sm-3">
                                     <label for="editAge">Age</label>
                                     <input type="number" class="form-control" id="editAge" readonly style="color: black; background-color: lightgray;">
                                 </div>
                                 <div class="col-sm-3">
                                     <label for="editSex">Sex</label>
-                                    <select class="form-control" id="editSex" name="sex" required>
+                                    <select class="form-control" id="editSex" name="sex" readonly style="color: black; background-color: lightgray;">
                                         <option value="" disabled selected>Select</option>
                                         <option value="Male">Male</option>
                                         <option value="Female">Female</option>
                                     </select>
                                 </div>
-                                <div class="col-sm-3">
+                                <div class="col-sm-4">
                                     <label for="editCivilStatus">Civil Status</label>
-                                    <select class="form-control" id="editCivilStatus" name="civilStatus" required>
+                                    <select class="form-control" id="editCivilStatus" name="editCivilStatus">
                                         <option value="" disabled selected>Select</option>
                                         <option value="Single">Single</option>
                                         <option value="Married">Married</option>
                                         <option value="Divorced">Divorced</option>
                                         <option value="Widowed">Widowed</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-4">
+                                    <label for="editStatus">Status</label>
+                                    <select class="form-control" id="editStatus" name="editStatus">
+                                        <option value="" disabled selected>Select</option>
+                                        <option value="Working">Working</option>
+                                        <option value="On Leave">On Leave</option>
+                                        <option value="On Break">On Break</option>
+                                        <option value="Available">Available</option>
                                     </select>
                                 </div>
                             </div>
@@ -738,7 +748,7 @@ include('include/navbar.php');
                     <div class="row">
                         <div class="col-sm-4">
                             <label for="editReligion">Religion</label>
-                            <select class="form-control" id="editReligion" name="religion" required>
+                            <select class="form-control" id="editReligion" name="religion" readonly style="color: black; background-color: lightgray;">
                                 <option value="" disabled selected>Select</option>
                                 <option value="Christianity">Christianity</option>
                                 <option value="Islam">Islam</option>
@@ -753,11 +763,11 @@ include('include/navbar.php');
                         </div>
                         <div class="col-sm-4">
                             <label for="editEmail">Email</label>
-                            <input type="email" class="form-control" id="editEmail" name="email" required>
+                            <input type="email" class="form-control" id="editEmail" name="email" readonly style="color: black; background-color: lightgray;">
                         </div>
                         <div class="col-sm-3">
                             <label for="editContactNumber">Contact Number</label>
-                            <input type="text" class="form-control" id="editContactNumber" name="contactNumber" required>
+                            <input type="text" class="form-control" id="editContactNumber" name="editContactNumber">
                         </div>
                     </div>
 
@@ -768,11 +778,11 @@ include('include/navbar.php');
                         </div>
                         <div class="col-sm-4">
                             <label for="editPosition">Position</label>
-                            <input type="text" class="form-control" id="editPosition" name="position" required>
+                            <input type="text" class="form-control" id="editPosition" name="editPosition">
                         </div>
                         <div class="col-sm-3">
                             <label for="editHiredDate">Hired Date</label>
-                            <input type="date" class="form-control" id="editHiredDate" name="hiredDate" required>
+                            <input type="date" class="form-control" id="editHiredDate" name="hiredDate" readonly style="color: black; background-color: lightgray;">
                         </div>
                     </div>
                 </div>
@@ -785,7 +795,6 @@ include('include/navbar.php');
     </div>
 </div>
 
-
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         function previewImage(event) {
@@ -797,7 +806,6 @@ include('include/navbar.php');
         }
 
 
-        
         function previewEditProfileIMG(event) {
             const reader = new FileReader();
             reader.onload = function () {
@@ -909,11 +917,21 @@ include('include/navbar.php');
 
                         if (Edit) {
                             $("#editProfilePreview").attr("src", response.photo);
-                            $("#editEmployeeAddress").val(response.address);
-                            $("#editEmployeePosition").val(response.position);
-                            $("#editEmployeeCivilStatus").val(response.civilStatus);
-                            $("#editEmployeeContact").val(response.contactNum);
-                            $("#editEmployeeStatus").val(response.status);
+                            $("#editFirstName").val(response.firstName);
+                            $("#editLastName").val(response.lastName);
+                            $("#editMiddleName").val(response.middleName);
+                            $("#editSuffix").val(response.suffix);
+                            $("#editAddress").val(response.address);
+                            $("#editAge").val(response.Age);
+                            $("#editSex").val(response.sex);
+                            $("#editPosition").val(response.position);
+                            $("#editCivilStatus").val(response.civilStatus);
+                            $("#editHiredDate").val(response.hireDate);
+                            $("#editReligion").val(response.religion);
+                            $("#editEmail").val(response.email);
+                            $("#editContactNumber").val(response.contactNum);
+                            $("#editDepartment").val(response.department);
+                            $("#editStatus").val(response.status);
                             $("#editEmployeeId").val(response.id); 
                         
                             $("#editEmployeeModal").modal("show");
@@ -963,6 +981,12 @@ include('include/navbar.php');
                     }
                 });
             });
+        });
+
+        //clears img input if edit modal is closed
+        $('#editEmployeeModal').on('hidden.bs.modal', function () {
+            $(this).find('input, textarea, select').val(''); // Clears all input, textarea, and select fields
+            $('#editProfilePreview').attr('src', 'emp_profile/default.png'); // Reset the image preview
         });
 
 

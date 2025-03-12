@@ -19,6 +19,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $civilStatus   = htmlspecialchars(trim($_POST['civilStatus']));
     $hiredDate     = htmlspecialchars(trim($_POST['hiredDate']));
     $contactNumber = htmlspecialchars(trim($_POST['contactNumber']));
+    $contactTWO    = htmlspecialchars(trim($_POST['contactNumberTWO']));
+    $landline      = htmlspecialchars(trim($_POST['landline']));
     $email         = htmlspecialchars(trim($_POST['email']));
     $religion      = htmlspecialchars(trim($_POST['religion'])); 
 
@@ -75,14 +77,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     // Prepare SQL query
-    $stmt = $conn->prepare("INSERT INTO employee (first_name, last_name, middle_name, suffix, sex, birthdate, address, position, department, civil_status, hiring_date, contact_number, email_address, photo_path, religion, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO employee (first_name, last_name, middle_name, suffix, sex, birthdate, address, position, department, civil_status, hiring_date, contact_number, contact_number2, landline, email_address, photo_path, religion, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
     if (!$stmt) {
         $response['error'] = "Prepare failed: " . $conn->error;
         echo json_encode($response);
         exit;
     }
     
-    $stmt->bind_param("sssssssssssissss", 
+    $stmt->bind_param("sssssssssssiiissss", 
         $firstName, 
         $lastName, 
         $middleName, 
@@ -95,6 +97,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $civilStatus, 
         $hiredDate, 
         $contactNumber, 
+        $contactTWO,
+        $landline,
         $email, 
         $photoPath, 
         $religion,

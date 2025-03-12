@@ -10,11 +10,11 @@ if (!isset($_POST['id']) || empty($_POST['id'])) {
 }
 
 $id = intval($_POST['id']);
-$address = $_POST['editEmployeeAddress'] ?? '';
-$position = $_POST['editEmployeePosition'] ?? '';
-$civilStatus = $_POST['editEmployeeCivilStatus'] ?? '';
-$contact = $_POST['editEmployeeContact'] ?? '';
-$empStatus = $_POST['editEmployeeStatus'] ?? '';
+$address = $_POST['editAddress'] ?? '';
+$position = $_POST['editPosition'] ?? '';
+$civilStatus = $_POST['editCivilStatus'] ?? '';
+$contact = $_POST['editContactNumber'] ?? '';
+$status = $_POST['editStatus'] ?? '';
 
 $photoPath = null;
 if (isset($_FILES['editEmployeePhoto']) && $_FILES['editEmployeePhoto']['error'] === 0) {
@@ -61,9 +61,9 @@ $query = "UPDATE employee SET address = ?, position = ?, civil_status = ?, conta
 
 $stmt = $conn->prepare($query);
 if ($photoPath) {
-    $stmt->bind_param("ssssssi", $address, $position, $civilStatus, $contact, $empStatus, $photoPath, $id);
+    $stmt->bind_param("ssssssi", $address, $position, $civilStatus, $contact, $status, $photoPath, $id);
 } else {
-    $stmt->bind_param("sssssi", $address, $position, $civilStatus, $contact, $empStatus, $id);
+    $stmt->bind_param("sssssi", $address, $position, $civilStatus, $contact, $status, $id);
 }
 
 if ($stmt->execute()) {

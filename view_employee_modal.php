@@ -26,6 +26,8 @@ if (isset($_POST['id'])) {
             "civilStatus" => htmlspecialchars($row['civil_status']),
             "hireDate" => htmlspecialchars($row['hiring_date']),
             "contactNum" => htmlspecialchars($row['contact_number']),
+            "contactNum2" => htmlspecialchars($row['contact_number2']),
+            "landline" => htmlspecialchars($row['landline']),
             "email" => htmlspecialchars($row['email_address']),
             "status" => htmlspecialchars($row['status'] ?? "N/A"),
             "age" => $row['age'],

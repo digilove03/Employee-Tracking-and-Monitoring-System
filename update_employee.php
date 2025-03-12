@@ -14,6 +14,8 @@ $address = $_POST['editAddress'] ?? '';
 $position = $_POST['editPosition'] ?? '';
 $civilStatus = $_POST['editCivilStatus'] ?? '';
 $contact = $_POST['editContactNumber'] ?? '';
+$contactTwo = $_POST['editContactNumberTWO'] ?? '';
+$landline = $_POST['editLandline'] ?? '';
 $status = $_POST['editStatus'] ?? '';
 
 $photoPath = null;
@@ -56,14 +58,14 @@ if (isset($_FILES['editEmployeePhoto']) && $_FILES['editEmployeePhoto']['error']
     }
 }
 
-$query = "UPDATE employee SET address = ?, position = ?, civil_status = ?, contact_number = ?, status = ?" .
+$query = "UPDATE employee SET address = ?, position = ?, civil_status = ?, contact_number = ?, contact_number2 = ?, landline = ?, status = ?" .
     ($photoPath ? ", photo_path = ?" : "") . " WHERE id = ?";
 
 $stmt = $conn->prepare($query);
 if ($photoPath) {
-    $stmt->bind_param("ssssssi", $address, $position, $civilStatus, $contact, $status, $photoPath, $id);
+    $stmt->bind_param("ssssssssi", $address, $position, $civilStatus, $contact, $contactTwo, $landline, $status, $photoPath, $id);
 } else {
-    $stmt->bind_param("sssssi", $address, $position, $civilStatus, $contact, $status, $id);
+    $stmt->bind_param("sssssssi", $address, $position, $civilStatus, $contact, $contactTwo, $landline, $status, $id);
 }
 
 if ($stmt->execute()) {

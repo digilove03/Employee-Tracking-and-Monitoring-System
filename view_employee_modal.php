@@ -12,25 +12,10 @@ if (isset($_POST['id'])) {
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
 
-        
-        $folderPath = 'emp_profile/' . $row['first_name'] . '_' . $row['last_name'] . '/';
-        $defaultPhoto = 'emp_profile/default.png';
-        
-        // Scan folder for an image file
-        $photoPath = $defaultPhoto;
-        if (is_dir($folderPath)) {
-            $files = scandir($folderPath);
-            foreach ($files as $file) {
-                if ($file !== "." && $file !== "..") {
-                    $photoPath = $folderPath . $file; // Use the first found image
-                    break;
-                }
-            }
-        }
-    
         echo json_encode([
             "success" => true,
-            "photo" => $photoPath,
+            "id" => $row['id'],
+            "photo" => $row['photo_path'],
             "name" => htmlspecialchars($row['first_name'] . ' ' . $row['middle_name'] . ' ' . $row['last_name'] . ' ' . $row['suffix']),
             "sex" => htmlspecialchars($row['sex']),
             "birthdate" => htmlspecialchars($row['birthdate']),
@@ -44,6 +29,10 @@ if (isset($_POST['id'])) {
             "email" => htmlspecialchars($row['email_address']),
             "status" => htmlspecialchars($row['status'] ?? "N/A"),
             "age" => $row['age'],
+            "firstName" => htmlspecialchars($row['first_name']),
+            "lastName" => htmlspecialchars($row['last_name']),
+            "middleName" => htmlspecialchars($row['middle_name']),
+            "suffix" => htmlspecialchars($row['suffix']),
         ]);
     } else {
         echo json_encode(["success" => false]);

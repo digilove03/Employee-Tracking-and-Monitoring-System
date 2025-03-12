@@ -922,7 +922,7 @@ include('include/navbar.php');
                             $("#editMiddleName").val(response.middleName);
                             $("#editSuffix").val(response.suffix);
                             $("#editAddress").val(response.address);
-                            $("#editAge").val(response.Age);
+                            $("#editAge").val(response.age);
                             $("#editSex").val(response.sex);
                             $("#editPosition").val(response.position);
                             $("#editCivilStatus").val(response.civilStatus);

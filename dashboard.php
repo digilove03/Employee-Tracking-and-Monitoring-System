@@ -22,6 +22,14 @@ while ($row = mysqli_fetch_assoc($result_status_count)) {
     $status_counts[$row['status']] = $row['count'];
 }
 
+// Get service status counts
+$sql_service_status_count = "SELECT service_status, COUNT(*) AS count FROM tasks GROUP BY service_status";
+$result_service_status_count = mysqli_query($conn, $sql_service_status_count);
+$service_status_counts = [];
+while ($row = mysqli_fetch_assoc($result_service_status_count)) {
+    $service_status_counts[$row['service_status']] = $row['count'];
+}
+
 // Get employee details
 $sql_employees = "SELECT first_name, middle_name, last_name, suffix, status, position FROM employee";
 $result_employees = mysqli_query($conn, $sql_employees);
@@ -96,7 +104,7 @@ $result_employees = mysqli_query($conn, $sql_employees);
                         <div class="charts-container">
                             <div class="card">
                                 <h5>SERVICE STATUS</h5>
-                                <canvas id="myBarChart"></canvas>
+                                <canvas id="myDonutChart"></canvas>
                             </div>
                             <br>
                             <div class="card">
@@ -114,21 +122,26 @@ $result_employees = mysqli_query($conn, $sql_employees);
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#employeeTable').DataTable();
+        $('#employeeTable').DataTable({
+            stripeClasses: []
+        });
     });
 
-    var ctxBar = document.getElementById("myBarChart").getContext("2d");
-    new Chart(ctxBar, {
-        type: "bar",
-        data: { 
-            labels: ["Working", "On Leave", "On Break", "Available"], 
-            datasets: [{ 
-                label: "Status Count", 
-                data: [<?php echo $status_counts['Working'] ?? 0; ?>, <?php echo $status_counts['On Leave'] ?? 0; ?>, <?php echo $status_counts['On Break'] ?? 0; ?>, <?php echo $status_counts['Available'] ?? 0; ?>], 
-                backgroundColor: ['#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']
-            }] 
+    var ctxDonut = document.getElementById("myDonutChart").getContext("2d");
+    new Chart(ctxDonut, {
+        type: "doughnut",
+        data: {
+            labels: ["Ongoing", "Completed", "Cancelled"],
+            datasets: [{
+                data: [<?php echo $service_status_counts['Ongoing'] ?? 0; ?>, <?php echo $service_status_counts['Completed'] ?? 0; ?>, <?php echo $service_status_counts['Cancelled'] ?? 0; ?>],
+                backgroundColor: ['#2563EB', '#3B82F6', '#93C5FD'],
+                hoverBackgroundColor: ['#1E40AF', '#2563EB', '#60A5FA']
+            }]
         },
-        options: { responsive: true, maintainAspectRatio: false }
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
     });
 
     var ctxPie = document.getElementById("myPieChart").getContext("2d");
@@ -146,4 +159,3 @@ $result_employees = mysqli_query($conn, $sql_employees);
 </script>
 </body>
 </html>
-

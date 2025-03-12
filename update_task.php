@@ -36,7 +36,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         }
 
         // Update task with completion time
-        $query = "UPDATE tasks SET service_status = ?, remarks = ?, completion_time = TIMESTAMPDIFF(MINUTE, time_started, NOW()) WHERE record_number = ?";
+        $query = "UPDATE tasks 
+        SET service_status = ?, 
+            remarks = ?, 
+            completion_time = SEC_TO_TIME(TIMESTAMPDIFF(SECOND, time_started, NOW())),
+            delay = CASE 
+                        WHEN TIMESTAMPDIFF(MINUTE, deadline, NOW()) > 30 THEN 'Yes' 
+                        ELSE 'No' 
+                    END
+        WHERE record_number = ?";        
         $stmt = $conn->prepare($query);
         if (!$stmt) {
             echo "error: " . $conn->error;
@@ -61,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         echo "success";
     } else { 
-        // The only valid statuses are "Completed" and "Canceled"
+        // The only valid statuses are "Completed" and "Cancelled"
         echo "error: invalid status";
         exit();
     }

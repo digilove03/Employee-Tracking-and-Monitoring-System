@@ -984,9 +984,9 @@ include('include/navbar.php');
         });
 
         //clears img input if edit modal is closed
-        $('#editEmployeeModal').on('hidden.bs.modal', function () {
+        $("#editEmployeeModal, #addEmployeeModal").on('hidden.bs.modal', function () {
             $(this).find('input, textarea, select').val(''); // Clears all input, textarea, and select fields
-            $('#editProfilePreview').attr('src', 'emp_profile/default.png'); // Reset the image preview
+            $('#editProfilePreview, #profilePreview').attr('src', 'emp_profile/default.png'); // Reset the image preview
         });
 
 

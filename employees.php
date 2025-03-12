@@ -514,7 +514,7 @@ include('include/navbar.php');
                             <!-- Photo Upload -->
                             <div class="col-sm-3 text-center">
                                 <img id="profilePreview" src="emp_profile/default.png" class="img-thumbnail" alt="Profile Picture">
-                                <input type="file" class="form-control" name="employeePhoto" id="employeePhoto" onchange="previewImage(event)">
+                                <input type="file" class="form-control" name="employeePhoto" id="employeePhoto" onchange="previewImage(event)" required>
                             </div>
                             <!-- Personal Information -->
                             <div class="col-sm-8">
@@ -571,7 +571,7 @@ include('include/navbar.php');
                         </div>
                         
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <label for="religion">Religion</label>
                                 <select class="form-control" id="religion" name="religion" required>
                                     <option value="" disabled selected>Select</option>
@@ -586,28 +586,36 @@ include('include/navbar.php');
                                     <option value="Other">Other</option>
                                 </select>
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <label for="email">Email</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
                             </div>
                             <div class="col-sm-3">
                                 <label for="contactNumber">Contact Number</label>
-                                <input type="int" class="form-control" id="contactNumber" name="contactNumber" required>
+                                <input type="int" class="form-control" id="contactNumber" name="contactNumber" min="0" oninput="numOnly(this)" required>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="contactNumberTWO">Contact Number</label>
+                                <input type="int" class="form-control" id="contactNumberTWO" name="contactNumberTWO" min="0" oninput="numOnly(this)">
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <label for="department">Department</label>
                                 <input type="text" class="form-control" id="department" name="department" value="<?php echo htmlspecialchars($department); ?>" readonly style="color: black; background-color: lightgray;">
                             </div>
-                            <div class="col-sm-4">
+                            <div class="col-sm-3">
                                 <label for="position">Position</label>
                                 <input type="text" class="form-control" id="position" name="position" required>
                             </div>
                             <div class="col-sm-3">
                                 <label for="hiredDate">Hired Date</label>
                                 <input type="date" class="form-control" id="hiredDate" name="hiredDate" required>
+                            </div>
+                            <div class="col-sm-3">
+                                <label for="landline">Landline</label>
+                                <input type="int" class="form-control" id="landline" name="landline" min="0" oninput="numOnly(this)">
                             </div>
                         </div>
                     </div>
@@ -652,7 +660,8 @@ include('include/navbar.php');
                     </div>
                 </div>
                 <div class="id-card-footer">
-                    <p class="text-center"><strong>Contact:</strong> <span id="employeeContact"></span> | <strong>Email:</strong> <span id="employeeEmail"></span></p>
+                    <p class="text-center"><strong>Contact:</strong> <span id="employeeContact"></span> | <span id="employeeContact2"></span><br>
+                    <strong>Email:</strong> <span id="employeeEmail"></span> | <strong>Landline:</strong> <span id="viewLandline"></span></p>
                 </div>
             </div>
         </div>
@@ -746,7 +755,7 @@ include('include/navbar.php');
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label for="editReligion">Religion</label>
                             <select class="form-control" id="editReligion" name="religion" readonly style="color: black; background-color: lightgray;">
                                 <option value="" disabled selected>Select</option>
@@ -761,28 +770,36 @@ include('include/navbar.php');
                                 <option value="Other">Other</option>
                             </select>
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label for="editEmail">Email</label>
                             <input type="email" class="form-control" id="editEmail" name="email" readonly style="color: black; background-color: lightgray;">
                         </div>
                         <div class="col-sm-3">
                             <label for="editContactNumber">Contact Number</label>
-                            <input type="text" class="form-control" id="editContactNumber" name="editContactNumber">
+                            <input type="text" class="form-control" id="editContactNumber" name="editContactNumber"  oninput="numOnly(this)" required>
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="editContactNumberTWO">Contact Number</label>
+                            <input type="text" class="form-control" id="editContactNumberTWO" name="editContactNumberTWO" oninput="numOnly(this)">
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label for="editDepartment">Department</label>
                             <input type="text" class="form-control" id="editDepartment" name="department" readonly style="color: black; background-color: lightgray;">
                         </div>
-                        <div class="col-sm-4">
+                        <div class="col-sm-3">
                             <label for="editPosition">Position</label>
                             <input type="text" class="form-control" id="editPosition" name="editPosition">
                         </div>
                         <div class="col-sm-3">
                             <label for="editHiredDate">Hired Date</label>
                             <input type="date" class="form-control" id="editHiredDate" name="hiredDate" readonly style="color: black; background-color: lightgray;">
+                        </div>
+                        <div class="col-sm-3">
+                            <label for="editLandline">Landline</label>
+                            <input type="number" class="form-control" id="editLandline" name="editLandline" oninput="numOnly(this)">
                         </div>
                     </div>
                 </div>
@@ -812,6 +829,10 @@ include('include/navbar.php');
                 document.getElementById('editProfilePreview').src = reader.result;
             }
             reader.readAsDataURL(event.target.files[0]);
+        }
+
+        function numOnly(input) {
+            input.value = input.value.replace(/[^0-9]/g, '');
         }
 
 
@@ -909,6 +930,8 @@ include('include/navbar.php');
                         $("#employeeCivilStatus").text(response.civilStatus);
                         $("#employeeHiredDate").text(response.hireDate);
                         $("#employeeContact").text(response.contactNum);
+                        $("#employeeContact2").text(response.contactNum2);
+                        $("#viewLandline").text(response.landline);
                         $("#employeeEmail").text(response.email);
                         $("#employeeStatus").text(response.status);
                         $("#employeeAge").text(response.age);
@@ -930,6 +953,8 @@ include('include/navbar.php');
                             $("#editReligion").val(response.religion);
                             $("#editEmail").val(response.email);
                             $("#editContactNumber").val(response.contactNum);
+                            $("#editContactNumberTWO").val(response.contactNum2);
+                            $("#editLandline").val(response.landline);
                             $("#editDepartment").val(response.department);
                             $("#editStatus").val(response.status);
                             $("#editEmployeeId").val(response.id); 

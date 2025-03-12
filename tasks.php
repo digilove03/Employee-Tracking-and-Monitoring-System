@@ -501,16 +501,17 @@ $tasks = fetchTasks($conn);
 
 <script>
     flatpickr("#estimatedTime", {
-    enableTime: true,
-    dateFormat: "Y-m-d H:i"
+        enableTime: true,
+        dateFormat: "Y-m-d H:i"
     });
+
     $(document).ready(function() {
         $('#taskTable').DataTable({
             "paging": true,  // Enable pagination
             "searching": true,  // Enable search bar
             "ordering": true,  // Enable column sorting
             "info": true,  // Show table info
-            "lengthMenu": [10, 25, 50, 100],  // Set number of records per page
+            "lengthMenu": [10],  // Set number of records per page
             "dom": 'Bfrtip',
             "buttons": [
                 'copy', 'csv', 'excel', 'pdf', 'print'
@@ -591,47 +592,46 @@ $tasks = fetchTasks($conn);
         });
     });
 
-    $(".viewTaskBtn").click(function () {
-            let taskId = $(this).data("id");
+    $(document).on("click", ".viewTaskBtn", function () {
+        let taskId = $(this).data("id");
 
-            $.ajax({
-                url: "get_task.php",
-                method: "POST",
-                data: { id: taskId },
-                dataType: "json",
-                success: function (response) {
-                    if (response.status === "success") {
-                        $("#record_number").val(response.data.record_number);
-                        $("#taskRecordNumber").text(response.data.record_number);
-                        $("#taskEmployeeName").text(response.data.employee_name);
-                        $("#taskService").text(response.data.service);
-                        $("#taskLocation").text(response.data.location);
-                        $("#taskDeadline").text(response.data.deadline);
-                        $("#taskRole").text(response.data.role);
-                        $("#taskTimeStarted").text(response.data.time_started);
-                        $("#taskTimeEnded").text(response.data.time_ended);
-                        $("#taskCompletionTime").text(response.completion_time);
-                        $("#service_status").val(response.data.service_status);
-                        $("#remarks").val(response.data.remarks ? response.data.remarks : "No Remarks.");
+        $.ajax({
+            url: "get_task.php",
+            method: "POST",
+            data: { id: taskId },
+            dataType: "json",
+            success: function (response) {
+                if (response.status === "success") {
+                    $("#record_number").val(response.data.record_number);
+                    $("#taskRecordNumber").text(response.data.record_number);
+                    $("#taskEmployeeName").text(response.data.employee_name);
+                    $("#taskService").text(response.data.service);
+                    $("#taskLocation").text(response.data.location);
+                    $("#taskDeadline").text(response.data.deadline);
+                    $("#taskRole").text(response.data.role);
+                    $("#taskTimeStarted").text(response.data.time_started);
+                    $("#taskTimeEnded").text(response.data.time_ended);
+                    $("#taskCompletionTime").text(response.completion_time);
+                    $("#service_status").val(response.data.service_status);
+                    $("#remarks").val(response.data.remarks ? response.data.remarks : "No Remarks.");
 
-                        // Disable fields if status is not 'Ongoing'
-                        if (response.data.service_status !== "Ongoing") {
-                            $("#service_status, #remarks").prop("disabled", true);
-                            $("#saveTaskChanges").hide();
-                          } else {
-                            $("#service_status, #remarks").prop("disabled", false);
-                            $("#saveTaskChanges").show();
-                        }
-
-                        $("#viewTaskModal").modal("show");
+                    if (response.data.service_status !== "Ongoing") {
+                        $("#service_status, #remarks").prop("disabled", true);
+                        $("#saveTaskChanges").hide();
                     } else {
-                        alert("Error fetching task details.");
+                        $("#service_status, #remarks").prop("disabled", false);
+                        $("#saveTaskChanges").show();
                     }
-                },
-                error: function () {
-                    alert("Failed to fetch task details.");
+
+                    $("#viewTaskModal").modal("show");
+                } else {
+                    alert("Error fetching task details.");
                 }
-            });
+            },
+            error: function () {
+                alert("Failed to fetch task details.");
+            }
+        });
     });
 
     $(document).on("submit", "#viewUpdateForm", function (e) {

@@ -892,7 +892,7 @@ include('include/navbar.php');
 
             // Make AJAX request to fetch employee details
             $.ajax({
-                url: "view_modal.php",  // Backend PHP file
+                url: "view_employee_modal.php",  // Backend PHP file
                 type: "POST",
                 data: { id: employeeId },
                 dataType: "json",

@@ -799,7 +799,7 @@ include('include/navbar.php');
                         </div>
                         <div class="col-sm-3">
                             <label for="editLandline">Landline</label>
-                            <input type="number" class="form-control" id="editLandline" name="editLandline" oninput="numOnly(this)">
+                            <input type="text" class="form-control" id="editLandline" name="editLandline" oninput="numOnly(this)">
                         </div>
                     </div>
                 </div>

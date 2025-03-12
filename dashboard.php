@@ -22,16 +22,7 @@ while ($row = mysqli_fetch_assoc($result_status_count)) {
     $status_counts[$row['status']] = $row['count'];
 }
 
-// Get service status counts
-$sql_service_status_count = "SELECT service_status, COUNT(*) AS count FROM tasks GROUP BY service_status";
-$result_service_status_count = mysqli_query($conn, $sql_service_status_count);
-$service_status_counts = [];
-while ($row = mysqli_fetch_assoc($result_service_status_count)) {
-    $service_status_counts[$row['service_status']] = $row['count'];
-}
-
-// Get employee details
-$sql_employees = "SELECT first_name, middle_name, last_name, suffix, status, position FROM employee";
+$sql_employees = "SELECT id, first_name, middle_name, last_name, suffix, status, position FROM employee";
 $result_employees = mysqli_query($conn, $sql_employees);
 ?>
 
@@ -42,19 +33,31 @@ $result_employees = mysqli_query($conn, $sql_employees);
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>Employee Monitoring & Tracking</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
-    <style>
-        .dashboard-container { display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; }
-        .card { flex: 1; padding: 10px; border-radius: 8px; text-align: center; background: #fff; box-shadow: 0px 3px 5px rgba(0,0,0,0.1); }
-        h3, h5 { color: #1E3A8A; font-size: 14px; margin: 5px 0; }
-        .card.total_employee h3 { font-size: 30px; }
-        .status_card { background: #f8f9fa; }
-        .table-container, .charts-container { flex: 1; max-width: 48%; }
-        .table-container table { font-size: 12px; width: 100%; }
-        .dataTables_wrapper { font-size: 12px; }
-        .charts-container canvas { max-height: 180px; }
-        .container-fluid { margin-top: 20px; }
-        
-    </style>
+  <style>
+    .dashboard-container { display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; }
+    .card { flex: 1; padding: 10px; border-radius: 8px; text-align: center; background: #fff; box-shadow: 0px 3px 5px rgba(0,0,0,0.1); }
+    h3, h5 { color: #1E3A8A; font-size: 14px; margin: 5px 0; }
+    .card.total_employee h3 { font-size: 30px; }
+    .status_card { background: #f8f9fa; }
+    .table-container, .charts-container { flex: 1; max-width: 48%; }
+    .table-container table { font-size: 12px; width: 100%; }
+    .dataTables_wrapper { font-size: 12px; }
+    
+    /* Adjusted chart sizes */
+    .charts-container { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 15px; 
+        max-width: 48%; 
+    }
+
+    .charts-container canvas { 
+        max-height: 220px; 
+        width: 100%; 
+    }
+
+    .container-fluid { margin-top: 20px; }
+</style>
 </head>
 <body class="sb-nav-fixed">
     <div id="layoutSidenav">
@@ -80,31 +83,46 @@ $result_employees = mysqli_query($conn, $sql_employees);
                         <?php } ?>
                     </div>
                     <br>
-                    <div class="dashboard-container">
-                        <div class="table-container">
-                            <div class="card">
-                                <h5>EMPLOYEE STATUS</h5>
-                                <table id="employeeTable" class="display">
-                                    <thead>
-                                        <tr><th>Name</th><th>Status</th><th>Position</th></tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php while ($employee = mysqli_fetch_assoc($result_employees)) { 
-                                            $full_name = trim("{$employee['first_name']} {$employee['middle_name']} {$employee['last_name']} {$employee['suffix']}"); ?>
-                                            <tr>
-                                                <td><?php echo $full_name; ?></td>
-                                                <td><?php echo $employee['status']; ?></td>
-                                                <td><?php echo $employee['position']; ?></td>
-                                            </tr>
-                                        <?php } ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    
+            <div class="dashboard-container">
+    <div class="table-container">
+        <div class="card">
+            <h5>EMPLOYEE STATUS</h5>
+            <table id="employeeTable" class="display">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Status</th>
+                        <th>Position</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php while ($employee = mysqli_fetch_assoc($result_employees)) { 
+                        $full_name = trim("{$employee['first_name']} {$employee['middle_name']} {$employee['last_name']} {$employee['suffix']}");
+                    ?>
+                        <tr>
+                            <td><?php echo $full_name; ?></td>
+                            <td>
+                                <select class="status-dropdown" data-employee-id="<?php echo $employee['id']; ?>">
+                                    <option value="Working" <?php echo ($employee['status'] == 'Working') ? 'selected' : ''; ?>>Working</option>
+                                    <option value="On Break" <?php echo ($employee['status'] == 'On Break') ? 'selected' : ''; ?>>On Break</option>
+                                    <option value="On Leave" <?php echo ($employee['status'] == 'On Leave') ? 'selected' : ''; ?>>On Leave</option>
+                                    <option value="Available" <?php echo ($employee['status'] == 'Available') ? 'selected' : ''; ?>>Available</option>
+                                </select>
+                            </td>
+                            <td><?php echo $employee['position']; ?></td>
+                        </tr>
+                    <?php } ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+                        
                         <div class="charts-container">
                             <div class="card">
                                 <h5>SERVICE STATUS</h5>
-                                <canvas id="myDonutChart"></canvas>
+                                <canvas id="myBarChart"></canvas>
                             </div>
                             <br>
                             <div class="card">
@@ -122,26 +140,21 @@ $result_employees = mysqli_query($conn, $sql_employees);
 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
 <script>
     $(document).ready(function() {
-        $('#employeeTable').DataTable({
-            stripeClasses: []
-        });
+        $('#employeeTable').DataTable();
     });
 
-    var ctxDonut = document.getElementById("myDonutChart").getContext("2d");
-    new Chart(ctxDonut, {
-        type: "doughnut",
-        data: {
-            labels: ["Ongoing", "Completed", "Cancelled"],
-            datasets: [{
-                data: [<?php echo $service_status_counts['Ongoing'] ?? 0; ?>, <?php echo $service_status_counts['Completed'] ?? 0; ?>, <?php echo $service_status_counts['Cancelled'] ?? 0; ?>],
-                backgroundColor: ['#2563EB', '#3B82F6', '#93C5FD'],
-                hoverBackgroundColor: ['#1E40AF', '#2563EB', '#60A5FA']
-            }]
+    var ctxBar = document.getElementById("myBarChart").getContext("2d");
+    new Chart(ctxBar, {
+        type: "bar",
+        data: { 
+            labels: ["Working", "On Leave", "On Break", "Available"], 
+            datasets: [{ 
+                label: "Status Count", 
+                data: [<?php echo $status_counts['Working'] ?? 0; ?>, <?php echo $status_counts['On Leave'] ?? 0; ?>, <?php echo $status_counts['On Break'] ?? 0; ?>, <?php echo $status_counts['Available'] ?? 0; ?>], 
+                backgroundColor: ['#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']
+            }] 
         },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false
-        }
+        options: { responsive: true, maintainAspectRatio: false }
     });
 
     var ctxPie = document.getElementById("myPieChart").getContext("2d");
@@ -156,6 +169,41 @@ $result_employees = mysqli_query($conn, $sql_employees);
         },
         options: { responsive: true, maintainAspectRatio: false }
     });
+
+
+
+    $(".status-dropdown").change(function () {
+        var employeeId = $(this).data("employee-id"); // Get employee ID
+        var newStatus = $(this).val(); // Get selected status
+
+        console.log("Employee ID:", employeeId);
+        console.log("New Status:", newStatus);
+
+        if (!employeeId) {
+            alert("Error: Employee ID is missing.");
+            return;
+        }
+
+        if (confirm("Are you sure you want to update the status?")) {
+            $.ajax({
+                url: "update_status.php",
+                type: "POST",
+                data: { id: employeeId, status: newStatus },
+                success: function (response) {
+                    console.log("Server Response:", response);
+                    alert("Status updated succesfully!");
+                    location.reload();
+                },
+                error: function () {
+                    alert("Error updating status.");
+                }
+            });
+        } else {
+            location.reload();
+        }
+    });
+
+
 </script>
 </body>
 </html>

@@ -281,7 +281,7 @@ $tasks = fetchTasks($conn);
 
             <!-- Task Records Table -->
             <div class="table-responsive">
-                        <table id="taskTable" class="display nowrap table table-striped table-bordered">
+                        <table id="taskTable" class="display nowrap table table-bordered">
                             <thead>
                                 <tr>
                                     <th>Record No.</th>
@@ -507,12 +507,14 @@ $tasks = fetchTasks($conn);
 
     $(document).ready(function() {
         $('#taskTable').DataTable({
-            "paging": true,  // Enable pagination
-            "searching": true,  // Enable search bar
-            "ordering": true,  // Enable column sorting
-            "info": true,  // Show table info
-            "lengthMenu": [10],  // Set number of records per page
-            "dom": 'Bfrtip',
+            stripeClasses: [],  
+            "paging": true,      // Enable pagination
+            "searching": true,   // Enable search bar
+            "ordering": true,    // Enable column sorting
+            "info": true,        // Show table info
+            "lengthMenu": [[8, 10, 25, 50, 75, -1], [8, 10, 25, 50, 75, "All"]],
+            "pageLength": 8,     // Set default number of records per page
+            "dom": '<"top"lBf>rt<"bottom"ip>', // Ensure length menu is visible
             "buttons": [
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
@@ -521,7 +523,7 @@ $tasks = fetchTasks($conn);
                 "lengthMenu": "Show _MENU_ records per page",
                 "info": "Showing _START_ to _END_ of _TOTAL_ tasks"
             }
-        });
+         }); 
 
         $("#serviceSelect").change(function() {
             if ($(this).val() === "Others") {

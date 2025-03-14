@@ -1,5 +1,6 @@
 <?php
 require_once 'db_connect.php';
+require_once 'log_employee_status.php'; // Include the logging function
 
 $response = ["success" => false, "message" => ""];
 
@@ -18,6 +19,7 @@ $contactTwo = $_POST['editContactNumberTWO'] ?? '';
 $landline = $_POST['editLandline'] ?? '';
 $status = $_POST['editStatus'] ?? '';
 
+// Check if a new photo is uploaded
 $photoPath = null;
 if (isset($_FILES['editEmployeePhoto']) && $_FILES['editEmployeePhoto']['error'] === 0) {
     $allowedTypes = ['jpg', 'jpeg', 'png', 'gif'];
@@ -28,6 +30,7 @@ if (isset($_FILES['editEmployeePhoto']) && $_FILES['editEmployeePhoto']['error']
         $stmt->bind_param("i", $id);
         $stmt->execute();
         $result = $stmt->get_result();
+
         if ($result->num_rows > 0) {
             $row = $result->fetch_assoc();
             $folderPath = 'emp_profile/' . $row['first_name'] . '_' . $row['last_name'] . '/';
@@ -58,6 +61,16 @@ if (isset($_FILES['editEmployeePhoto']) && $_FILES['editEmployeePhoto']['error']
     }
 }
 
+// Get the old status before updating
+$oldStatus = null;
+$statusQuery = $conn->prepare("SELECT status FROM employee WHERE id = ?");
+$statusQuery->bind_param("i", $id);
+$statusQuery->execute();
+$statusQuery->bind_result($oldStatus);
+$statusQuery->fetch();
+$statusQuery->close();
+
+// Prepare the update query
 $query = "UPDATE employee SET address = ?, position = ?, civil_status = ?, contact_number = ?, contact_number2 = ?, landline = ?, status = ?" .
     ($photoPath ? ", photo_path = ?" : "") . " WHERE id = ?";
 
@@ -68,7 +81,13 @@ if ($photoPath) {
     $stmt->bind_param("sssssssi", $address, $position, $civilStatus, $contact, $contactTwo, $landline, $status, $id);
 }
 
+// Execute the update
 if ($stmt->execute()) {
+    // Log the status change if it was modified
+    if ($oldStatus !== $status) {
+        logEmployeeStatus($conn, $id, $status);
+    }
+
     $response["success"] = true;
     $response["message"] = "Employee updated successfully!";
 } else {

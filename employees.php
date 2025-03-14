@@ -366,7 +366,11 @@ include('include/navbar.php');
             font-size: 12px;
         }
 
-    
+        .close-btn:hover {
+            background-color:rgb(53, 48, 53);
+            color: #ddd;
+        }
+        
         .save-btn:hover {
         background-color:rgb(27, 125, 231); /* Darker Blue */
         transform: scale(1.05); /* Slight scale-up effect */

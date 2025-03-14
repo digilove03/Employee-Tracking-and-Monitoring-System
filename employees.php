@@ -33,7 +33,7 @@ include('include/navbar.php');
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <meta name="description" content="" />
     <meta name="author" content="" />
-    <title>EMPLOYEE TRACKING AND MONITORING SYSTEM</title>
+    <title>Employee Monitoring & Tracking</title>
     <style>
         .dropdown-item:hover {
             cursor: pointer;
@@ -214,193 +214,201 @@ include('include/navbar.php');
 
         .modal-lg {
         max-width: 800px; /* Increased width */
-    }
+        }
+        
+        .modal-md {
+            max-width: 500px; /* ID Card Size */
+        }
+
+        .custom-id-card {
+            border-radius: 10px;
+            border: 2px solid #007bff;
+            background: #f8f9fa;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .id-card-header {
+            background: #007bff;
+            color: white;
+            padding: 10px;
+            border-radius: 8px 8px 0 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .id-card-body {
+            padding: 15px;
+        }
+
+        .id-photo {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 30%;
+            border: 3px solid #007bff;
+            margin-top: 10px;
+        }
+
+        .id-card-footer {
+            background: #e9ecef;
+            padding: 10px;
+            text-align: center;
+            font-size: 14px;
+            border-radius: 0 0 8px 8px;
+        }
+
+        .id-card-body p {   
+            font-size: 14px;
+            margin: 5px 0;
+            font-weight: 500;
+        }
+        .btn-info {
+        background-color:rgb(78, 171, 252) !important; /* Darker Blue */
+        border-color: #0a58ca !important; /* Adjusts border color */
+        color: white !important; /* Ensures text remains visible */
+        }
+        
+        .btn-info:hover {
+            background-color: #0a58ca !important; /* Even darker on hover */
+            border-color: #094aad !important;
+        }
+
+        .btn-warning {
+            background-color: #f7dc6f !important;
+        }
+
+        .btn-warning:hover {
+            background-color:rgb(163, 144, 61) !important;
+            border-color: rgb(165, 144, 49);
+        }
+
+         .custom-modal {
+            max-width: 400px; /* Smaller width */
+        }
+
+        .custom-modal-content {
+            border-radius: 6px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
+            padding: 10px;
+        }
+
+        /* Blue Header */
+        .custom-modal-header {
+            background-color: #007bff; /* Primary Blue */
+            border-bottom: none;
+            padding: 8px 12px;
+            color: white;
+        }
+
+        .custom-modal-header .btn-close {
+            filter: invert(1); /* Makes close button white */
+        }
+
+        /* Profile Picture Section */
+        .custom-photo-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .custom-profile-preview {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 1px solid #ddd;
+        }
+
+        .custom-file-input {
+            max-width: 180px;
+            font-size: 12px;
+            padding: 4px;
+        }
+
+        /* Form Inputs */
+        .custom-label {
+            font-weight: 500;
+            font-size: 12px;
+            color: #333;
+            margin-bottom: 2px;
+        }
+
+        .custom-input, .custom-select {
+            border-radius: 3px;
+            padding: 6px;
+            font-size: 12px;
+            border: 1px solid #ccc;
+        }
+
+        /* Modal Footer */
+        .custom-modal-footer {
+            padding: 8px;
+        }
+
+        /* Side-by-Side Buttons */
+        .custom-btn-primary {
+            background-color: #007bff;
+            border: none;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
+        .custom-btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .custom-btn-secondary {
+            background-color: #6c757d;
+            border: none;
+            padding: 6px 12px;
+            font-size: 12px;
+        }
+
     
-    .modal-md {
-        max-width: 500px; /* ID Card Size */
-    }
+        .save-btn:hover {
+        background-color:rgb(27, 125, 231); /* Darker Blue */
+        transform: scale(1.05); /* Slight scale-up effect */
+        color: #fff;
+        }
 
-    .custom-id-card {
-        border-radius: 10px;
-        border: 2px solid #007bff;
-        background: #f8f9fa;
-        padding: 20px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    }
+        .save-btn:active {
+            background-color: #004494; /* Even darker blue when clicked */
+            transform: scale(0.98); /* Slight press-down effect */
+        }
 
-    .id-card-header {
-        background: #007bff;
-        color: white;
-        padding: 10px;
-        border-radius: 8px 8px 0 0;
-        text-align: center;
-        font-weight: bold;
-    }
+        /* Make the modal wider */
+        #editEmployeeModal .modal-dialog {
+            max-width: 800px; /* Adjust width as needed */
+        }
 
-    .id-card-body {
-        padding: 15px;
-    }
+        /* Change the modal header background to #007bff */
+        #editEmployeeModal .modal-header {
+            background-color: #007bff !important;
+            color: white;
+        }
 
-    .id-photo {
-        width: 100px;
-        height: 100px;
-        object-fit: cover;
-        border-radius: 30%;
-        border: 3px solid #007bff;
-        margin-top: 10px;
-    }
+        /* Change form focus color */
+        #editEmployeeModal .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
+        }
 
-    .id-card-footer {
-        background: #e9ecef;
-        padding: 10px;
-        text-align: center;
-        font-size: 14px;
-        border-radius: 0 0 8px 8px;
-    }
+        /* Update Save Button */
+        .save-btn {
+            background-color: #007bff !important;
+        }
 
-    .id-card-body p {   
-        font-size: 14px;
-        margin: 5px 0;
-        font-weight: 500;
-    }
-    .btn-info {
-    background-color:rgb(78, 171, 252) !important; /* Darker Blue */
-    border-color: #0a58ca !important; /* Adjusts border color */
-    color: white !important; /* Ensures text remains visible */
-}
-.btn-info:hover {
-    background-color: #0a58ca !important; /* Even darker on hover */
-    border-color: #094aad !important;
-}
-
-.custom-modal {
-        max-width: 400px; /* Smaller width */
-    }
-
-    .custom-modal-content {
-        border-radius: 6px;
-        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.15);
-        padding: 10px;
-    }
-
-    /* Blue Header */
-    .custom-modal-header {
-        background-color: #007bff; /* Primary Blue */
-        border-bottom: none;
-        padding: 8px 12px;
-        color: white;
-    }
-
-    .custom-modal-header .btn-close {
-        filter: invert(1); /* Makes close button white */
-    }
-
-    /* Profile Picture Section */
-    .custom-photo-section {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        margin-bottom: 6px;
-    }
-
-    .custom-profile-preview {
-        width: 70px;
-        height: 70px;
-        object-fit: cover;
-        border-radius: 50%;
-        border: 1px solid #ddd;
-    }
-
-    .custom-file-input {
-        max-width: 180px;
-        font-size: 12px;
-        padding: 4px;
-    }
-
-    /* Form Inputs */
-    .custom-label {
-        font-weight: 500;
-        font-size: 12px;
-        color: #333;
-        margin-bottom: 2px;
-    }
-
-    .custom-input, .custom-select {
-        border-radius: 3px;
-        padding: 6px;
-        font-size: 12px;
-        border: 1px solid #ccc;
-    }
-
-    /* Modal Footer */
-    .custom-modal-footer {
-        padding: 8px;
-    }
-
-    /* Side-by-Side Buttons */
-    .custom-btn-primary {
-        background-color: #007bff;
-        border: none;
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-
-    .custom-btn-primary:hover {
-        background-color: #0056b3;
-    }
-
-    .custom-btn-secondary {
-        background-color: #6c757d;
-        border: none;
-        padding: 6px 12px;
-        font-size: 12px;
-    }
-
-   
-    .save-btn:hover {
-    background-color:rgb(27, 125, 231); /* Darker Blue */
-    transform: scale(1.05); /* Slight scale-up effect */
-    color: #fff;
-}
-
-.save-btn:active {
-    background-color: #004494; /* Even darker blue when clicked */
-    transform: scale(0.98); /* Slight press-down effect */
-}
-
-/* Make the modal wider */
-#editEmployeeModal .modal-dialog {
-    max-width: 800px; /* Adjust width as needed */
-}
-
-/* Change the modal header background to #007bff */
-#editEmployeeModal .modal-header {
-    background-color: #007bff !important;
-    color: white;
-}
-
-/* Change form focus color */
-#editEmployeeModal .form-control:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 6px rgba(0, 123, 255, 0.5);
-}
-
-/* Update Save Button */
-.save-btn {
-    background-color: #007bff !important;
-}
-
-.save-btn:hover {
-    background-color: #0056b3 !important;
-}
-
+        .save-btn:hover {
+            background-color: #0056b3 !important;
+        }
     </style>
-
 </head>
 <body class="sb-nav-fixed">
     <div id="layoutSidenav">
         
-        <div id="layoutSidenav_content">
+    <div id="layoutSidenav_content">
     <main>
         <div class="container-fluid px-4">
             <!-- Row for Add New Button (Aligned Right) -->

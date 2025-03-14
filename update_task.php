@@ -1,5 +1,6 @@
 <?php 
 include(__DIR__ . '/db_connect.php'); // Ensure correct path
+include(__DIR__ . '/log_employee_status.php'); // Include logging function
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $taskId = $_POST['record_number'] ?? null;
@@ -35,39 +36,54 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             exit();
         }
 
-        // Update task with completion time
-        $query = "UPDATE tasks 
-        SET service_status = ?, 
-            remarks = ?, 
-            completion_time = SEC_TO_TIME(TIMESTAMPDIFF(SECOND, time_started, NOW())),
-            delay = CASE 
-                        WHEN TIMESTAMPDIFF(MINUTE, deadline, NOW()) > 30 THEN 'Yes' 
-                        ELSE 'No' 
-                    END
-        WHERE record_number = ?";        
-        $stmt = $conn->prepare($query);
-        if (!$stmt) {
-            echo "error: " . $conn->error;
-            exit();
-        }
-        $stmt->bind_param("ssi", $service_status, $remarks, $taskId);
-        $stmt->execute();
-        $stmt->close();
+        // Start transaction
+        mysqli_begin_transaction($conn);
 
-        // Update the employee status to "Available"
-        if ($employeeId) {
-            $query = "UPDATE employee SET status = 'Available' WHERE id = ?";
+        try {
+            // Update task with completion time
+            $query = "UPDATE tasks 
+            SET service_status = ?, 
+                remarks = ?, 
+                completion_time = SEC_TO_TIME(TIMESTAMPDIFF(SECOND, time_started, NOW())),
+                delay = CASE 
+                            WHEN TIMESTAMPDIFF(MINUTE, deadline, NOW()) > 30 THEN 'Yes' 
+                            ELSE 'No' 
+                        END
+            WHERE record_number = ?";        
             $stmt = $conn->prepare($query);
             if (!$stmt) {
-                echo "error: " . $conn->error;
-                exit();
+                throw new Exception("error: " . $conn->error);
             }
-            $stmt->bind_param("i", $employeeId);
+            $stmt->bind_param("ssi", $service_status, $remarks, $taskId);
             $stmt->execute();
             $stmt->close();
-        }
 
-        echo "success";
+            // Update the employee status to "Available"
+            if ($employeeId) {
+                $query = "UPDATE employee SET status = 'Available' WHERE id = ?";
+                $stmt = $conn->prepare($query);
+                if (!$stmt) {
+                    throw new Exception("error: " . $conn->error);
+                }
+                $stmt->bind_param("i", $employeeId);
+                $stmt->execute();
+                $stmt->close();
+
+                // Log the status change
+                $logResult = logEmployeeStatus($conn, $employeeId, 'Available');
+                if (strpos($logResult, "Error") !== false) {
+                    throw new Exception($logResult);
+                }
+            }
+
+            // Commit transaction
+            mysqli_commit($conn);
+            echo "success";
+        } catch (Exception $e) {
+            // Rollback transaction on error
+            mysqli_rollback($conn);
+            echo $e->getMessage();
+        }
     } else { 
         // The only valid statuses are "Completed" and "Cancelled"
         echo "error: invalid status";

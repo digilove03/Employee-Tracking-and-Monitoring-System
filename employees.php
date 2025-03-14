@@ -984,6 +984,10 @@ include('include/navbar.php');
             
                 var formData = new FormData(this); // Collect form data
                 formData.append('id', $('#editEmployeeId').val()); // Add employee ID
+
+                if (!confirm("Are you sure you want to save changes for this employee?")) {
+                return false;
+                }
             
                 $.ajax({
                     url: 'update_employee.php', // Path to your PHP script
@@ -1019,5 +1023,3 @@ include('include/navbar.php');
 </body>
 </html>
 <?php $conn->close(); ?>
-
-

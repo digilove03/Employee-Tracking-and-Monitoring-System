@@ -45,7 +45,7 @@ $tasks = fetchTasks($conn);
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-  <title>EMPLOYEE TRACKING AND MONITORING SYSTEM</title>
+  <title>Employee Monitoring & Tracking System</title>
   <!-- Flatpickr CSS for date/time picker -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <!-- Bootstrap CSS -->

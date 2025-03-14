@@ -256,7 +256,12 @@ $tasks = fetchTasks($conn);
 
     #printTaskDetails:hover {
         background-color: #007bff;
+       /* Table Header Styling */
+      .table-primary {
+        background-color: #007bff;
+        color: white;
     }
+    
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -265,33 +270,28 @@ $tasks = fetchTasks($conn);
         <div id="layoutSidenav_content">
   <main>
         <div class="container-fluid px-4">
-            <!-- Row for Add New Button (Aligned Right) -->
-            <div class="row">
-                <div class="col-md-12 d-flex justify-content-end">
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
-                    <i class="fas fa-tasks"></i> Assign New Task
-                    </button>
-                </div>
-            </div>
+      <!-- Row for Add New Button (Aligned Right) -->
+    <div class="row mb-3">
+        <div class="col-md-12 d-flex justify-content-end">
+            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
+                <i class="fas fa-tasks"></i> Assign New Task
+            </button>
+        </div>
+    </div>
 
-            <!-- Line Break -->
-            <br>
-
-            <br>
-
-            <!-- Task Records Table -->
-            <div class="table-responsive">
-                        <table id="taskTable" class="display nowrap table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>Record No.</th>
-                                    <th>Employee</th>
-                                    <th>Service</th>
-                                    <th>Location</th>
-                                    <th>Time Started</th>
-                                    <th> </th>
-                                </tr>
-                            </thead>
+    <!-- Task Records Table -->
+    <div class="table-responsive">
+        <table id="taskTable" class="table table-bordered table-hover">
+            <thead class="table-primary">
+                <tr>
+                    <th>Record No.</th>
+                    <th>Employee</th>
+                    <th>Service</th>
+                    <th>Location</th>
+                    <th>Time Started</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
                             <tbody>
                                 <?php foreach ($tasks as $row) { ?>
                                     <tr>

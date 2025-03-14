@@ -1,5 +1,6 @@
 <?php 
 require 'db_connect.php'; // Include database connection
+require 'log_employee_status.php'; // Include the logging function
 
 header('Content-Type: application/json');
 
@@ -107,6 +108,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // Execute and check for success
     if ($stmt->execute()) {
+        $newEmployeeId = $stmt->insert_id; // Get the ID of the newly inserted employee
+
+        // Log the initial status
+        logEmployeeStatus($conn, $newEmployeeId, $status);
+
         $response['success'] = true;
     } else {
         $response['error'] = "Database Error: " . $stmt->error;

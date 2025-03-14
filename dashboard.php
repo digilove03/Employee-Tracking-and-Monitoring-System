@@ -39,7 +39,7 @@ $result_employees = mysqli_query($conn, $sql_employees);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Employee Monitoring & Tracking</title>
+    <title>Employee Monitoring & Tracking System</title>
     <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
   <style>
     .dashboard-container { display: flex; flex-wrap: wrap; gap: 15px; justify-content: space-between; }
@@ -92,48 +92,48 @@ $result_employees = mysqli_query($conn, $sql_employees);
                     </div>
                     <br>
                     
-            <div class="dashboard-container">
-    <div class="table-container">
-        <div class="card">
-            <h5>EMPLOYEE STATUS</h5>
-            <table id="employeeTable" class="display">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Status</th>
-                        <th>Position</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php while ($employee = mysqli_fetch_assoc($result_employees)) { 
-                        $full_name = trim("{$employee['first_name']} {$employee['middle_name']} {$employee['last_name']} {$employee['suffix']}");
-                    ?>
-                        <tr>
-                            <td><?php echo $full_name; ?></td>
-                            <td>
-                                <select class="status-dropdown" data-employee-id="<?php echo $employee['id']; ?>">
-                                    <option value="Working" <?php echo ($employee['status'] == 'Working') ? 'selected' : ''; ?>>Working</option>
-                                    <option value="On Break" <?php echo ($employee['status'] == 'On Break') ? 'selected' : ''; ?>>On Break</option>
-                                    <option value="On Leave" <?php echo ($employee['status'] == 'On Leave') ? 'selected' : ''; ?>>On Leave</option>
-                                    <option value="Available" <?php echo ($employee['status'] == 'Available') ? 'selected' : ''; ?>>Available</option>
-                                </select>
-                            </td>
-                            <td><?php echo $employee['position']; ?></td>
-                        </tr>
-                    <?php } ?>
-                </tbody>
-            </table>
-        </div>
-    </div>
+                <div class="dashboard-container">
+                        <div class="table-container">
+                            <div class="card">
+                                <h5>EMPLOYEE STATUS</h5>
+                                <table id="employeeTable" class="display">
+                                    <thead>
+                                        <tr>
+                                            <th>Name</th>
+                                            <th>Status</th>
+                                            <th>Position</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <?php while ($employee = mysqli_fetch_assoc($result_employees)) { 
+                                            $full_name = trim("{$employee['first_name']} {$employee['middle_name']} {$employee['last_name']} {$employee['suffix']}");
+                                        ?>
+                                            <tr>
+                                                <td><?php echo $full_name; ?></td>
+                                                <td>
+                                                    <select class="status-dropdown" data-employee-id="<?php echo $employee['id']; ?>">
+                                                        <option value="Working" <?php echo ($employee['status'] == 'Working') ? 'selected' : ''; ?>>Working</option>
+                                                        <option value="On Break" <?php echo ($employee['status'] == 'On Break') ? 'selected' : ''; ?>>On Break</option>
+                                                        <option value="On Leave" <?php echo ($employee['status'] == 'On Leave') ? 'selected' : ''; ?>>On Leave</option>
+                                                        <option value="Available" <?php echo ($employee['status'] == 'Available') ? 'selected' : ''; ?>>Available</option>
+                                                    </select>
+                                                </td>
+                                                <td><?php echo $employee['position']; ?></td>
+                                            </tr>
+                                        <?php } ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
 
                         
                         <div class="charts-container">
                             <div class="card">
                                 <h5>Service Status</h5>
-                                <canvas id="myDonutChart"></canvas>
+                                <canvas id="donutChart"></canvas>
                             </div>
                             <div class="card">
-                                <h5>Employee Status Pie Chart</h5>
+                                <h5>Employee Performance</h5>
                                 <canvas id="myPieChart"></canvas>
                             </div>
                         </div>
@@ -152,7 +152,7 @@ $result_employees = mysqli_query($conn, $sql_employees);
          });    
     });
 
-    var ctxDonut = document.getElementById("myDonutChart").getContext("2d");
+    var ctxDonut = document.getElementById("donutChart").getContext("2d");
     new Chart(ctxDonut, {
         type: "doughnut",
         data: {

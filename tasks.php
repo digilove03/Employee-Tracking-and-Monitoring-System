@@ -474,6 +474,11 @@ $tasks = fetchTasks($conn);
                         <p class="task-text" id="taskTimeEnded"></p>
                     </div>
 
+                    <div class="task-detail">
+                        <label class="task-label">Completion Time</label>
+                        <p class="task-text" id="taskCompletionTime"></p>
+                    </div>
+                    
                     <hr style="width: 100%; height: 2px; background-color: black; border: none;">
                     <div class="task-detail">
                         <label class="task-label">Status</label>
@@ -613,10 +618,18 @@ $tasks = fetchTasks($conn);
                     $("#taskRole").text(response.data.role);
                     $("#taskTimeStarted").text(response.data.time_started);
                     $("#taskTimeEnded").text(response.data.time_ended);
-                    $("#taskCompletionTime").text(response.completion_time);
+                    $("#taskCompletionTime").text(response.data.completion_time);
                     $("#service_status").val(response.data.service_status);
                     $("#remarks").val(response.data.remarks ? response.data.remarks : "No Remarks.");
 
+                    if (response.data.service_status === "Ongoing") {
+                        $("#taskTimeEnded").closest(".task-detail").hide();
+                        $("#taskCompletionTime").closest(".task-detail").hide();
+                    } else {
+                        $("#taskTimeEnded").closest(".task-detail").show();
+                        $("#taskCompletionTime").closest(".task-detail").show();
+                    }
+                    
                     if (response.data.service_status !== "Ongoing") {
                         $("#service_status, #remarks").prop("disabled", true);
                         $("#saveTaskChanges").hide();

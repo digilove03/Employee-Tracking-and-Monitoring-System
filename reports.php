@@ -95,23 +95,54 @@ include 'include/navbar.php';
                         <div class="filter-container">
                             <div class="filter-group">
                                 <label>Categorize by:</label>
-                                <button class="filter-btn active">All</button>
-                                <button class="filter-btn">Employee <i class="fa-solid fa-user-group"></i></button>
-                                <button class="filter-btn">Service</button>
-                                <button class="filter-btn">Service Status <i class="fa-solid fa-chevron-down"></i></button>
-                                <button class="filter-btn">Location</button>
+                                <button class="filter-btn" data-filter="all">All</button>
+
+                                <select class="filter-btn" name="select_employee" id="select_employee" data-filter="employee">
+                                    <option value="" disabled selected>Select Employee</option>
+                                    <?php
+                                        include('db_connect.php');
+                                        $query = "SELECT id, last_name, first_name FROM employee WHERE status = 'Available' ORDER BY last_name ASC";
+                                        $employeeResult = mysqli_query($conn, $query);
+                                        if (mysqli_num_rows($employeeResult) > 0) {
+                                            while ($row = mysqli_fetch_assoc($employeeResult)) {
+                                                echo '<option value="' . $row['id'] . '">' . $row['last_name'] . ', ' . $row['first_name'] . '</option>';
+                                            }
+                                        } else {
+                                            echo '<option value="" disabled>No available employees</option>';
+                                        }
+                                    ?>
+                                </select>
+                                <select class="filter-btn" name="service" id="service" data-filter="service">
+                                    <option value="" disabled selected>Service</option>
+                                    <option value="Diagnostic">Diagnostic</option>
+                                    <option value="Computer Format">Computer Format</option>
+                                    <option value="Data Recovery">Data Recovery</option>
+                                    <option value="Virus/Malware Removal">Virus/Malware Removal</option>
+                                    <option value="Computer Repair">Computer Repair</option>
+                                    <option value="Change Hardware">Change Hardware</option>
+                                    <option value="Computer Upgrade">Computer Upgrade</option>
+                                    <option value="Printer Repair">Printer Repair</option>
+                                    <option value="Printer Setup">Printer Setup</option>
+                                    <option value="Printer Reset">Printer Reset</option>
+                                    <option value="Router Setup">Router Setup</option>
+                                    <option value="Router Reset">Router Reset</option>
+                                    <option value="Others">Others</option>
+                                </select>
                             </div>
+                            
                             <div class="filter-group">
                                 <label>Date:</label>
-                                <button class="filter-btn">Weekly</button>
-                                <button class="filter-btn active">Monthly</button>
-                                <button class="filter-btn">Yearly</button>
-                                <button class="filter-btn">Custom <i class="fa-solid fa-calendar"></i></button>
+                                <button class="filter-btn" data-range="weekly">Weekly</button>
+                                <button class="filter-btn" data-range="monthly">Monthly</button>
+                                <button class="filter-btn" data-range="yearly">Yearly</button>
+                                <button class="filter-btn" data-range="custom">
+                                    Custom <i class="fa-solid fa-calendar"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
                     <div class="button-container">
-                        <button class="generate-btn">Generate Report</button>
+                        <button class="generate-btn" id="generateReportBtn">Generate Report</button>
                         <button class="export-btn">Export Report <i class="fa-solid fa-file-export"></i></button>
                     </div>
                     <div>
@@ -119,8 +150,13 @@ include 'include/navbar.php';
                         <div class="container-fluid px-4">
                             <div class="row">
                                 <div class="col-xl-6 col-md-6">
-                                    <h3>Text here</h3>
-                                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit.</p>
+                                    <div>
+                                        <p>Total Tasks:<span id="total-tasks">0</span></p>
+                                        <p>Completed:<span id="completed-tasks">0</span></p>
+                                        <p>Ongoing:<span id="ongoing-tasks">0</span></p>
+                                        <p>Cancelled:<span id="cancelled-tasks">0</span></p>
+                                    </div>
+                                    <table id="report-container"></table>
                                 </div>
                                 <div class="col-xl-6 col-md-6 card" id="chart_div">
                                     <h5 style="text-align: center;">DEPARTMENT PRODUCTIVITY</h5>
@@ -156,6 +192,64 @@ include 'include/navbar.php';
                     }],
                 },
             });
+
+
+
+            document.addEventListener("DOMContentLoaded", function () {
+                let currentFilter = "all";
+                let currentDateRange = "all";
+
+                function updateActiveButton(groupSelector, activeButton) {
+                    document.querySelectorAll(groupSelector).forEach(button => {
+                        button.classList.remove("active-filter");
+                    });
+                    activeButton.classList.add("active-filter");
+                }
+                document.querySelectorAll(".filter-btn[data-filter]").forEach(button => {
+                    button.addEventListener("click", function () {
+                        currentFilter = this.dataset.filter;
+                        updateActiveButton(".filter-btn[data-filter]", this);
+                    });
+                });
+          
+                document.querySelectorAll(".filter-btn[data-range]").forEach(button => {
+                    button.addEventListener("click", function () {
+                        currentDateRange = this.dataset.range;
+                        updateActiveButton(".filter-btn[data-range]", this);
+                    });
+                });
+            
+                document.getElementById("service").addEventListener("change", function () {
+                    currentFilter = this.value;
+                    updateActiveButton(".filter-btn[data-filter]", this);
+                });    
+                document.querySelector(".filter-btn[data-filter='all']").classList.add("active-filter");
+                document.querySelector(".filter-btn[data-range='weekly']").classList.add("active-filter");
+            });
+
+            document.addEventListener("DOMContentLoaded", function () {
+                document.getElementById("generateReportBtn").addEventListener("click", function () {
+                    let formData = new FormData();
+                    formData.append("employee_id", document.getElementById("select_employee").value);
+                    formData.append("service", document.getElementById("service").value);
+                    formData.append("date_range", document.querySelector(".filter-btn[data-range].active")?.getAttribute("data-range") || "yearly");
+                
+                    fetch("get_reports.php", {
+                        method: "POST",
+                        body: formData,
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        document.getElementById("report-container").innerHTML = data.report;
+                        document.getElementById("total-tasks").innerText = data.total_tasks;
+                        document.getElementById("completed-tasks").innerText = data.completed_tasks;
+                        document.getElementById("ongoing-tasks").innerText = data.ongoing_tasks;
+                        document.getElementById("cancelled-tasks").innerText = data.cancelled_tasks;
+                    })
+                    .catch(error => console.error("Error:", error));
+                });
+            });
+
         </script>   
     </body>
 </html>

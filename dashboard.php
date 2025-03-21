@@ -180,20 +180,6 @@ $result_employees = mysqli_query($conn, $sql_employees);
         }
     });
 
-    var ctxPie = document.getElementById("myPieChart").getContext("2d");
-    new Chart(ctxPie, {
-        type: "pie",
-        data: { 
-            labels: ["Working", "On Leave", "On Break", "Available"], 
-            datasets: [{ 
-                data: [<?php echo $status_counts['Working'] ?? 0; ?>, <?php echo $status_counts['On Leave'] ?? 0; ?>, <?php echo $status_counts['On Break'] ?? 0; ?>, <?php echo $status_counts['Available'] ?? 0; ?>], 
-                backgroundColor: ['#2563EB', '#3B82F6', '#60A5FA', '#93C5FD']
-            }] 
-        },
-        options: { responsive: true, maintainAspectRatio: false }
-    });
-
-
 
     $(".status-dropdown").change(function () {
         var employeeId = $(this).data("employee-id"); // Get employee ID

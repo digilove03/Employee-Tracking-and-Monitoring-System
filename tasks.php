@@ -256,12 +256,63 @@ $tasks = fetchTasks($conn);
 
     #printTaskDetails:hover {
         background-color: #007bff;
-       /* Table Header Styling */
-      .table-primary {
-        background-color: #007bff;
-        color: white;
     }
+
+    #taskTable {
+    margin: 2px; 
+    border: 0.5px solid #000; 
+    width: 100%; 
+    table-layout: fixed; /* Ensures consistent column widths */
+    border-collapse: collapse; /* Prevents missing borders */
+}
+
+#taskTable th {
+    background-color: rgb(75, 137, 213); 
+    color: white; 
+    text-align: center;
+    border: 0.5px solid #000;
+    padding: 8px;
+    white-space: nowrap; /* Prevents headers from wrapping */
+}
+
+#taskTable td {
+    border: 0.5px solid #000; 
+    padding: 10px;
+    white-space: normal; /* Allows content to wrap */
+    word-wrap: break-word; /* Ensures text wraps properly */
+    overflow: hidden;
+}
+
+/* Assign proportional widths to columns */
+#taskTable th:nth-child(1),
+#taskTable td:nth-child(1) { width: 10%; } /* Record No. */
     
+#taskTable th:nth-child(2),
+#taskTable td:nth-child(2) { width: 25%; } /* Employee */
+
+#taskTable th:nth-child(3),
+#taskTable td:nth-child(3) { width: 40%; } /* Service */
+
+#taskTable th:nth-child(4),
+#taskTable td:nth-child(4) { width: 7%; } /* Location */
+
+#taskTable th:nth-child(5),
+#taskTable td:nth-child(5) { width: 15%; } /* Time Started */
+
+#taskTable th:nth-child(6),
+#taskTable td:nth-child(6) { 
+    width: 8%; 
+    text-align: center;
+    border-right: 0.5px solid #000 !important; /* Fixes missing right border */
+}
+
+/* Ensure table fits within the container */
+.table-responsive {
+    margin: 2px;
+    overflow-x: hidden; /* Prevents horizontal scrolling */
+    display: flex;
+    justify-content: center;
+}
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -270,28 +321,33 @@ $tasks = fetchTasks($conn);
         <div id="layoutSidenav_content">
   <main>
         <div class="container-fluid px-4">
-      <!-- Row for Add New Button (Aligned Right) -->
-    <div class="row mb-3">
-        <div class="col-md-12 d-flex justify-content-end">
-            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
-                <i class="fas fa-tasks"></i> Assign New Task
-            </button>
-        </div>
-    </div>
+            <!-- Row for Add New Button (Aligned Right) -->
+            <div class="row">
+                <div class="col-md-12 d-flex justify-content-end">
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
+                    <i class="fas fa-tasks"></i> Assign New Task
+                    </button>
+                </div>
+            </div>
 
-    <!-- Task Records Table -->
-    <div class="table-responsive">
-        <table id="taskTable" class="table table-bordered table-hover">
-            <thead class="table-primary">
-                <tr>
-                    <th>Record No.</th>
-                    <th>Employee</th>
-                    <th>Service</th>
-                    <th>Location</th>
-                    <th>Time Started</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
+            <!-- Line Break -->
+            <br>
+
+            <br>
+
+            <!-- Task Records Table -->
+            <div class="table-responsive">
+                        <table id="taskTable" class="display nowrap table table-bordered">
+                            <thead>
+                                <tr>
+                                    <th>Record No.</th>
+                                    <th>Employee</th>
+                                    <th>Service</th>
+                                    <th>Location</th>
+                                    <th>Time Started</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
                             <tbody>
                                 <?php foreach ($tasks as $row) { ?>
                                     <tr>
@@ -455,7 +511,7 @@ $tasks = fetchTasks($conn);
                     </div>
 
                     <div class="task-detail">
-                        <label class="task-label">Estimated Time</label>
+                        <label class="task-label">Estimated Time Deadline</label>
                         <p class="task-text" id="taskDeadline"></p>
                     </div>
 
@@ -468,7 +524,7 @@ $tasks = fetchTasks($conn);
                         <label class="task-label">Time Started</label>
                         <p class="task-text" id="taskTimeStarted"></p>
                     </div>
-
+                    
                     <div class="task-detail">
                         <label class="task-label">Time Ended</label>
                         <p class="task-text" id="taskTimeEnded"></p>
@@ -478,7 +534,7 @@ $tasks = fetchTasks($conn);
                         <label class="task-label">Completion Time</label>
                         <p class="task-text" id="taskCompletionTime"></p>
                     </div>
-                    
+
                     <hr style="width: 100%; height: 2px; background-color: black; border: none;">
                     <div class="task-detail">
                         <label class="task-label">Status</label>
@@ -517,8 +573,8 @@ $tasks = fetchTasks($conn);
             "searching": true,   // Enable search bar
             "ordering": true,    // Enable column sorting
             "info": true,        // Show table info
-            "lengthMenu": [[8, 10, 25, 50, 75, -1], [8, 10, 25, 50, 75, "All"]],
-            "pageLength": 8,     // Set default number of records per page
+            "lengthMenu": [[10, 25, 50, 75, -1], [10, 25, 50, 75, "All"]],
+            "pageLength": 10,     // Set default number of records per page
             "dom": '<"top"lBf>rt<"bottom"ip>', // Ensure length menu is visible
             "buttons": [
                 'copy', 'csv', 'excel', 'pdf', 'print'
@@ -629,7 +685,7 @@ $tasks = fetchTasks($conn);
                         $("#taskTimeEnded").closest(".task-detail").show();
                         $("#taskCompletionTime").closest(".task-detail").show();
                     }
-                    
+
                     if (response.data.service_status !== "Ongoing") {
                         $("#service_status, #remarks").prop("disabled", true);
                         $("#saveTaskChanges").hide();

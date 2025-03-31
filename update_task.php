@@ -12,8 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         exit();
     }
 
-    // Check if the status is "Completed" or "Cancelled"
-    if ($service_status === "Completed" || $service_status === "Cancelled") {
+    // Check if the status is "Completed" or "Canceled"
+    if ($service_status === "Completed" || $service_status === "Canceled") {
         // Fetch `time_started` and `employee_id`
         $query = "SELECT time_started, employee_id FROM tasks WHERE record_number = ?";
         $stmt = $conn->prepare($query);
@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             echo $e->getMessage();
         }
     } else { 
-        // The only valid statuses are "Completed" and "Cancelled"
+        // The only valid statuses are "Completed" and "Canceled"
         echo "error: invalid status";
         exit();
     }

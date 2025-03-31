@@ -11,34 +11,38 @@ include('include/scripts.php');
 include('include/header.php');
 include('include/navbar.php');
 
-function fetchTasks($conn) {
+// Function to fetch tasks based on service_status
+function fetchTasks($conn, $service_status) {
     $sql = "SELECT 
                 t.record_number, 
                 t.employee_id, 
                 t.service, 
                 t.location, 
-                t.role, 
                 t.time_started, 
-                t.completion_time, 
-                t.remarks, 
-                t.service_status, 
                 CONCAT(e.first_name, ' ', LEFT(e.middle_name, 1), '. ', e.last_name) AS employee_name
             FROM tasks t
             JOIN employee e ON t.employee_id = e.id
+            WHERE t.service_status = ?
             ORDER BY t.time_started";
 
     $stmt = $conn->prepare($sql);
     if ($stmt === false) {
         die("Error preparing statement: " . $conn->error);
     }
-    
+
+    $stmt->bind_param("s", $service_status);
     $stmt->execute();
     $result = $stmt->get_result();
-    
+
     return $result ? $result->fetch_all(MYSQLI_ASSOC) : [];
 }
-$tasks = fetchTasks($conn);
+
+// Fetch tasks for each status
+$ongoingTasks = fetchTasks($conn, 'Ongoing');
+$completedTasks = fetchTasks($conn, 'Completed');
+$canceledTasks = fetchTasks($conn, 'Canceled');
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -55,14 +59,19 @@ $tasks = fetchTasks($conn);
   <!-- Flatpickr JS -->
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <!-- DataTables CSS -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.3.6/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
   <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.3.6">
   <!-- DataTables JS -->
-  <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.3.6/js/buttons.print.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+    <script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
+  
   <style>
     .dropdown-item:hover {
         cursor: pointer;
@@ -118,8 +127,8 @@ $tasks = fetchTasks($conn);
     }
 
     .save-btn {
-        background-color: blue;
-        color: white;
+        background-color: #C6E7FF;
+        color: #000;
     }
 
     /* Form Controls */
@@ -136,31 +145,6 @@ $tasks = fetchTasks($conn);
         margin-bottom: 0;
         padding-top: 5px;
         font-style: italic;
-    }
-      
-    #assignTaskModal .modal-dialog {
-        max-width: 40%; /* Reduce the width */
-    }
-
-    #assignTaskModal .modal-body {
-        padding: 10px; /* Reduce padding */
-        max-height: 60vh; /* Reduce height if necessary */
-        overflow-y: auto;
-    }
-
-    #assignTaskModal .modal-header, 
-    #assignTaskModal .modal-footer {
-        padding: 8px; /* Reduce space on top and bottom */
-    }
-
-    #assignTaskModal label {
-        font-size: 12px; /* Make labels slightly smaller */
-    }
-
-    #assignTaskModal .form-select,
-    #assignTaskModal .form-control {
-        font-size: 14px; /* Keep input readability but slightly smaller */
-        padding: 6px; /* Reduce padding */
     }
 
     @media (max-width: 576px) {
@@ -212,11 +196,11 @@ $tasks = fetchTasks($conn);
     }
 
     .modal-header {
-      background-color: #007bff;
-      color: #fff;
+      background-color: #A1E3F9;
+      color: #black;
     }
 
-    .task-modal .modal-content {
+    .modal-content {
         border-radius: 10px;
         padding: 15px;
     }
@@ -248,71 +232,81 @@ $tasks = fetchTasks($conn);
         border-radius: 5px;
     }
 
-    #printTaskDetails {
-        background-color: rgb(5, 72, 175);
-        color: white;
+    #printTaskDetails,
+    #assignTaskBtn {
+        background-color: #FFDDAE !important; 
+        color: #000 !important; 
+        border-color:rgb(230, 173, 92) !important;
         transition: background-color 0.3s ease;
     }
 
-    #printTaskDetails:hover {
-        background-color: #007bff;
+    #printTaskDetails:hover,
+    #assignTaskBtn:hover {
+        background-color:rgb(204, 125, 15) !important;
+        color: white !important;
     }
 
-    #taskTable {
-    margin: 2px; 
-    border: 0.5px solid #000; 
-    width: 100%; 
-    table-layout: fixed; /* Ensures consistent column widths */
-    border-collapse: collapse; /* Prevents missing borders */
-}
+    #ongoingTaskTable,
+    #completedTaskTable,
+    #canceledTaskTable {
+        border-collapse: collapse !important; /* Ensures borders collapse properly */
+        width: 100%;
+    }
 
-#taskTable th {
-    background-color: rgb(75, 137, 213); 
-    color: white; 
-    text-align: center;
-    border: 0.5px solid #000;
-    padding: 8px;
-    white-space: nowrap; /* Prevents headers from wrapping */
-}
+    #ongoingTaskTable th,
+    #completedTaskTable th,
+    #canceledTaskTable th {
+        border: 1px solid black !important; /* Forces all borders */
+    }
 
-#taskTable td {
-    border: 0.5px solid #000; 
-    padding: 10px;
-    white-space: normal; /* Allows content to wrap */
-    word-wrap: break-word; /* Ensures text wraps properly */
-    overflow: hidden;
-}
+    #ongoingTaskTable thead th,
+    #completedTaskTable thead th,
+    #canceledTaskTable thead th {
+        border-bottom: 2px solid black !important; /* Makes header thicker */
+        border-top: 2px solid black !important;
+    }
 
-/* Assign proportional widths to columns */
-#taskTable th:nth-child(1),
-#taskTable td:nth-child(1) { width: 10%; } /* Record No. */
-    
-#taskTable th:nth-child(2),
-#taskTable td:nth-child(2) { width: 25%; } /* Employee */
+    .btn.btn-primary {
+        background-color: #C6E7FF; /* Default color */
+        color: #000;
+        transition: background-color 0.3s ease;
+    }
 
-#taskTable th:nth-child(3),
-#taskTable td:nth-child(3) { width: 40%; } /* Service */
+    .btn.btn-primary:hover {
+        background-color: #578FCA;
+        color: white;
+    }
 
-#taskTable th:nth-child(4),
-#taskTable td:nth-child(4) { width: 7%; } /* Location */
+    #addServiceBtn {
+        background-color: #D4F6FF !important; 
+        color: #000 !important; 
+        border-color:rgb(110, 171, 236) !important;
+        transition: background-color 0.3s ease;
+        width: 150px;
+    }
 
-#taskTable th:nth-child(5),
-#taskTable td:nth-child(5) { width: 15%; } /* Time Started */
-
-#taskTable th:nth-child(6),
-#taskTable td:nth-child(6) { 
-    width: 8%; 
-    text-align: center;
-    border-right: 0.5px solid #000 !important; /* Fixes missing right border */
-}
-
-/* Ensure table fits within the container */
-.table-responsive {
-    margin: 2px;
-    overflow-x: hidden; /* Prevents horizontal scrolling */
-    display: flex;
-    justify-content: center;
-}
+    #addServiceBtn:hover {
+        background-color: #578FCA !important;
+        color: white !important;
+    }
+    .nav-tabs .nav-link {
+        background-color: lightgray;
+        color:rgb(21, 10, 89);
+        font-size: 14px;
+        transition: all 0.3s;
+    }
+    .nav-tabs .nav-link.active {
+        background-color:rgb(72, 201, 234);
+        color: white !important;
+        padding: 14px 18px;
+        font-size: 16px;
+        margin-bottom: -1px;
+        border-bottom: 2px solid white;
+    }
+    .nav-tabs .nav-link.inactive {
+        background-color: gray;
+        color: white;
+    }
     </style>
 </head>
 <body class="sb-nav-fixed">
@@ -324,7 +318,7 @@ $tasks = fetchTasks($conn);
             <!-- Row for Add New Button (Aligned Right) -->
             <div class="row">
                 <div class="col-md-12 d-flex justify-content-end">
-                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
+                    <button id="assignTaskBtn" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#assignTaskModal">
                     <i class="fas fa-tasks"></i> Assign New Task
                     </button>
                 </div>
@@ -334,11 +328,43 @@ $tasks = fetchTasks($conn);
             <br>
 
             <br>
+            <!-- Tablist -->
+            <ul class="nav nav-tabs" id="taskTabs" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="ongoing-tab" data-bs-toggle="tab"
+                    href="#ongoing" role="tab">
+                        Ongoing
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="completed-tab" data-bs-toggle="tab"
+                    href="#completed" role="tab">
+                        Completed
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="canceled-tab" data-bs-toggle="tab"
+                    href="#canceled" role="tab">
+                        Canceled
+                    </a>
+                </li>
+            </ul>
+            <!-- Tab Content -->
+            <div class="tab-content" id="tasksTabsContent">
 
-            <!-- Task Records Table -->
-            <div class="table-responsive">
-                        <table id="taskTable" class="display nowrap table table-bordered">
-                            <thead>
+                <!-- Ongoing TAB -->
+                <div class="tab-pane fade show active" id="ongoing" role="tabpanel">
+                    <br>
+                    <div class="table-responsive">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div id="ongoing-length-container"></div>  <!-- Length menu (records per page) -->
+                        <div id="ongoing-buttons-container"></div> <!-- Buttons -->
+                    </div>
+
+                    <div id="ongoing-search-container" class="d-flex justify-content-end mb-3"></div> <!-- Space before table -->
+
+                        <table id="ongoingTaskTable" class="display table-bordered">
+                            <thead style="background-color: #C6E7FF !important; color: #000 !important; font-weight: bold !important;">
                                 <tr>
                                     <th>Record No.</th>
                                     <th>Employee</th>
@@ -349,27 +375,123 @@ $tasks = fetchTasks($conn);
                                 </tr>
                             </thead>
                             <tbody>
-                                <?php foreach ($tasks as $row) { ?>
+                                <?php foreach ($ongoingTasks as $row) { ?>
                                     <tr>
                                         <td><?php echo htmlspecialchars($row['record_number']); ?></td>
                                         <td><?php echo htmlspecialchars($row['employee_name']); ?></td>
                                         <td><?php echo htmlspecialchars($row['service']); ?></td>
                                         <td><?php echo htmlspecialchars($row['location']); ?></td>
                                         <td><?php echo date('Y-m-d H:i', strtotime($row['time_started'])); ?></td>
-                                        <td style="text-align:center">
+                                        <td style="text-align:center; color: #000;">
                                             <button class="btn btn-primary btn-sm viewTaskBtn" 
+                                                style="background-color: #FFDDAE !important; color: #000 !important; border-color:rgb(230, 173, 92) !important;"
                                                 data-bs-toggle="modal" 
                                                 data-bs-target="#viewTaskModal" 
                                                 data-id="<?php echo $row['record_number']; ?>">
-                                                <i class="fas fa-eye"></i> View
+                                                <i class="fas fa-eye" style="color: #000 !important;"></i> View
                                             </button>
                                         </td>
                                     </tr>
                                 <?php } ?>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- Completed TAB -->
+                <div class="tab-pane fade" id="completed" role="tabpanel">
+                    <br>
+                    <div class="table-responsive">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div id="completed-length-container"></div>  <!-- Length menu (records per page) -->
+                        <div id="completed-buttons-container"></div> <!-- Buttons -->
+                    </div>
+
+                    <div id="completed-search-container" class="d-flex justify-content-end mb-3"></div> <!-- Space before table -->
+
+                        <table id="completedTaskTable" class="display table-bordered">
+                            <thead style="background-color: #C6E7FF !important; color: #000 !important; font-weight: bold !important;">
+                                <tr>
+                                    <th>Record No.</th>
+                                    <th>Employee</th>
+                                    <th>Service</th>
+                                    <th>Location</th>
+                                    <th>Time Started</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($completedTasks as $row) { ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($row['record_number']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['employee_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['service']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['location']); ?></td>
+                                        <td><?php echo date('Y-m-d H:i', strtotime($row['time_started'])); ?></td>
+                                        <td style="text-align:center; color: #000;">
+                                            <button class="btn btn-primary btn-sm viewTaskBtn" 
+                                                style="background-color: #FFDDAE !important; color: #000 !important; border-color:rgb(230, 173, 92) !important;"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#viewTaskModal" 
+                                                data-id="<?php echo $row['record_number']; ?>">
+                                                <i class="fas fa-eye" style="color: #000 !important;"></i> View
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Canceled TAB -->
+                <div class="tab-pane fade" id="canceled" role="tabpanel">
+                    <br>
+                    <div class="table-responsive">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <div id="canceled-length-container"></div>  <!-- Length menu (records per page) -->
+                        <div id="canceled-buttons-container"></div> <!-- Buttons -->
+                    </div>
+
+                    <div id="canceled-search-container" class="d-flex justify-content-end mb-3"></div> <!-- Space before table -->
+
+                        <table id="canceledTaskTable" class="display table-bordered">
+                            <thead style="background-color: #C6E7FF !important; color: #000 !important; font-weight: bold !important;">
+                                <tr>
+                                    <th>Record No.</th>
+                                    <th>Employee</th>
+                                    <th>Service</th>
+                                    <th>Location</th>
+                                    <th>Time Started</th>
+                                    <th> </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($canceledTasks as $row) { ?>
+                                    <tr>
+                                        <td><?php echo htmlspecialchars($row['record_number']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['employee_name']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['service']); ?></td>
+                                        <td><?php echo htmlspecialchars($row['location']); ?></td>
+                                        <td><?php echo date('Y-m-d H:i', strtotime($row['time_started'])); ?></td>
+                                        <td style="text-align:center; color: #000;">
+                                            <button class="btn btn-primary btn-sm viewTaskBtn" 
+                                                style="background-color: #FFDDAE !important; color: #000 !important; border-color:rgb(230, 173, 92) !important;"
+                                                data-bs-toggle="modal" 
+                                                data-bs-target="#viewTaskModal" 
+                                                data-id="<?php echo $row['record_number']; ?>">
+                                                <i class="fas fa-eye" style="color: #000 !important;"></i> View
+                                            </button>
+                                        </td>
+                                    </tr>
+                                <?php } ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <br>
             </div>
-        </div>
   </main>
 
   <!-- Assign Task Modal -->
@@ -377,7 +499,8 @@ $tasks = fetchTasks($conn);
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="assignTaskModalLabel">Assign New Task</h5>
+                <h5 class="modal-title" id="assignTaskModalLabel"><i class="fas fa-tasks"></i>
+                Assign New Task</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -427,7 +550,7 @@ $tasks = fetchTasks($conn);
                                 <option value="Router Reset">Router Reset</option>
                                 <option value="Others">Others</option>
                             </select>
-                            <button type="button" id="addServiceBtn" class="btn btn-secondary" style="background-color: rgb(22, 125, 235); color: white; width: 150px;">Add Service</button>
+                            <button type="button" id="addServiceBtn" class="btn btn-secondary">Add Service</button>
                         </div>
 
                         <!-- Custom input for 'Others' -->
@@ -479,7 +602,8 @@ $tasks = fetchTasks($conn);
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="viewTaskModalLabel"><i class="fas fa-clipboard-list"></i> View Task Details</h5>
+                <h5 class="modal-title" id="viewTaskModalLabel"><i class="fas fa-clipboard-list"></i>
+                View Task Details</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
 
@@ -541,7 +665,7 @@ $tasks = fetchTasks($conn);
                         <select id="service_status" name="service_status" class="form-select task-select">
                             <option value="Ongoing">Ongoing</option>
                             <option value="Completed">Completed</option>
-                            <option value="Cancelled">Cancelled</option>
+                            <option value="Canceled">Canceled</option>
                         </select>
                     </div>
 
@@ -567,24 +691,78 @@ $tasks = fetchTasks($conn);
     });
 
     $(document).ready(function() {
-        $('#taskTable').DataTable({
-            stripeClasses: [],  
-            "paging": true,      // Enable pagination
-            "searching": true,   // Enable search bar
-            "ordering": true,    // Enable column sorting
-            "info": true,        // Show table info
+        // Initialize each DataTable separately with the correct options
+        let ongoingTable = $('#ongoingTaskTable').DataTable({
+            stripeClasses: [],
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
             "lengthMenu": [[10, 25, 50, 75, -1], [10, 25, 50, 75, "All"]],
-            "pageLength": 10,     // Set default number of records per page
-            "dom": '<"top"lBf>rt<"bottom"ip>', // Ensure length menu is visible
+            "pageLength": 10,
+            "dom": '<"top"lBf>rtip',
             "buttons": [
-                'copy', 'csv', 'excel', 'pdf', 'print'
+                'copy', 'csv', 'print'
             ],
             "language": {
                 "search": "Search Task: ",
                 "lengthMenu": "Show _MENU_ records per page",
                 "info": "Showing _START_ to _END_ of _TOTAL_ tasks"
             }
-         }); 
+        });
+
+        let completedTable = $('#completedTaskTable').DataTable({
+            stripeClasses: [],
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthMenu": [[10, 25, 50, 75, -1], [10, 25, 50, 75, "All"]],
+            "pageLength": 10,
+            "dom": '<"top"lBf>rtip',
+            "buttons": [
+                'copy', 'csv', 'print'
+            ],
+            "language": {
+                "search": "Search Task: ",
+                "lengthMenu": "Show _MENU_ records per page",
+                "info": "Showing _START_ to _END_ of _TOTAL_ tasks"
+            }
+        });
+
+        let canceledTable = $('#canceledTaskTable').DataTable({
+            stripeClasses: [],
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "lengthMenu": [[10, 25, 50, 75, -1], [10, 25, 50, 75, "All"]],
+            "pageLength": 10,
+            "dom": '<"top"lBf>rtip',
+            "buttons": [
+                'copy', 'csv', 'print'
+            ],
+            "language": {
+                "search": "Search Task: ",
+                "lengthMenu": "Show _MENU_ records per page",
+                "info": "Showing _START_ to _END_ of _TOTAL_ tasks"
+            }
+        });
+
+        // Move the length menu (records per page) to its own div
+        $('#ongoing-length-container').html($('#ongoingTaskTable_length'));
+        $('#completed-length-container').html($('#completedTaskTable_length'));
+        $('#canceled-length-container').html($('#canceledTaskTable_length'));
+
+        // Move the buttons to their own div
+        $('#ongoing-buttons-container').html(ongoingTable.buttons().container());
+        $('#completed-buttons-container').html(completedTable.buttons().container());
+        $('#canceled-buttons-container').html(canceledTable.buttons().container());
+
+        // Move the search to their own div
+        $('#ongoing-search-container').html($('#ongoingTaskTable_filter'));
+        $('#completed-search-container').html($('#completedTaskTable_filter'));
+        $('#canceled-search-container').html($('#canceledTaskTable_filter'));
 
         $("#serviceSelect").change(function() {
             if ($(this).val() === "Others") {
